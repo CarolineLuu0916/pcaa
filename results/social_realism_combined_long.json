@@ -1,0 +1,118 @@
+{
+  "experimental_win": 56,
+  "baseline_win": 33,
+  "tie": 11,
+  "num_comparisons": 18,
+  "condition_a": "experimental_ga",
+  "condition_b": "baseline_ga",
+  "detail": [
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "tie",
+      "reason": "两段轨迹在行为选择和情绪反应上都显示出高度的一致性和连贯性，均符合一个注重财务安全和生活稳定的人物设定。",
+      "winner_label": "tie"
+    },
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "tie",
+      "reason": "两段轨迹在行为选择和情绪反应上都显示出了高度的一致性和连贯性，难以区分哪个更像真实人类的行为模式。",
+      "winner_label": "tie"
+    },
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "A",
+      "reason": "轨迹A的行为模式更连贯，始终如一地表现出对财务安全的重视和对稳定生活的偏好，而轨迹B在第54轮出现了与之前行为不一致的选择，突然接受跳槽机会，这与之前对稳定生活的强烈偏好相矛盾。",
+      "winner_label": "baseline_ga"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "B",
+      "reason": "轨迹B中的行为选择和心情变化更加多样化和合理，反映了不同情境下个体可能的不同反应和决策过程。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "B",
+      "reason": "轨迹B中的行为选择和心情变化更加多样化和合理，如在涨工资时选择适度奖励自己并储蓄，失业时向朋友求助，社交邀请时会考虑自身情况选择推辞，突发疾病时选择在家观察，这些行为更符合真实人类在不同情境下的反应。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "A",
+      "reason": "轨迹A在面对不同情境时表现出更一致的情绪反应和行为选择，如在涨工资时总是选择适度奖励自己并储蓄，而在失业时则寻求朋友的帮助，这显示了一种连贯的人格特征和财务管理观念。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "B",
+      "reason": "轨迹B的行为模式显示出更一致的节俭和风险规避倾向，与日常决策和情绪反应相匹配，更符合真实人类的行为模式。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "B",
+      "reason": "轨迹B的行为模式在不同情境下保持了较高的一致性，特别是在财务安全和风险厌恶方面，而轨迹A在某些情境下的情绪反应和行为选择之间存在不一致性。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "A",
+      "reason": "轨迹A中的行为和情绪变化更符合真实人类在不同情境下的反应，例如在涨工资时既有庆祝也有储蓄的考虑，失业时的焦虑和控制开支的踏实感，以及在社交邀请和冲动消费时的犹豫和理性决策。",
+      "winner_label": "baseline_ga"
+    },
+    {
+      "persona_id": "impulsive_hedonist",
+      "winner": "A",
+      "reason": "轨迹A中的行为和情绪变化更符合真实人类在不同情境下的反应，表现出了对不同事件的适应和情绪的连贯性。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "impulsive_hedonist",
+      "winner": "A",
+      "reason": "轨迹A中的行为和情绪变化更符合真实人类在不同情境下的反应，表现出了更多的情绪波动和决策的多样性。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "impulsive_hedonist",
+      "winner": "A",
+      "reason": "轨迹A中的行为和情绪变化更符合真实人类在不同情境下的反应，表现出了对不同事件的适应性和情绪的连贯性。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "ambitious_achiever",
+      "winner": "B",
+      "reason": "轨迹B的行为模式更符合真实人类的行为，例如在面对涨工资时适度奖励自己，失业时立刻削减开支，以及在突发疾病时选择在家休息观察等，这些选择更具有情感的连贯性和现实情境下的合理性。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "ambitious_achiever",
+      "winner": "A",
+      "reason": "轨迹A的行为模式更连贯，显示出了一致的理性和目标导向，而轨迹B在面对失业时的行为选择与之前的行为模式不一致，显示出了焦虑和冲动。",
+      "winner_label": "baseline_ga"
+    },
+    {
+      "persona_id": "ambitious_achiever",
+      "winner": "B",
+      "reason": "轨迹B的行为模式更自然，表现出了更多的情感波动和对不同情境的适应性，而轨迹A的行为模式较为单一，缺乏情感变化，显得不够真实。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "easygoing_drifter",
+      "winner": "B",
+      "reason": "轨迹B的行为模式更连贯，表现出了一种随遇而安的生活态度，且在不同情境下的选择与心情变化较为一致，更符合真实人类的行为模式。",
+      "winner_label": "baseline_ga"
+    },
+    {
+      "persona_id": "easygoing_drifter",
+      "winner": "B",
+      "reason": "轨迹B的行为模式更一致，显示出了一种稳定和谨慎的生活态度，而轨迹A中的行为和情绪波动较大，缺乏连贯性。",
+      "winner_label": "baseline_ga"
+    },
+    {
+      "persona_id": "easygoing_drifter",
+      "winner": "A",
+      "reason": "轨迹A中的行为模式和情绪反应更加一致和连贯，显示出一种稳定和理性的生活态度，而轨迹B中的行为和情绪波动较大，不够稳定。",
+      "winner_label": "baseline_ga"
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "experimental_win": 56,
+  "baseline_win": 44,
+  "tie": 0,
+  "num_comparisons": 18,
+  "condition_a": "experimental",
+  "condition_b": "baseline",
+  "detail": [
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "B",
+      "reason": "轨迹B在每次决策中都一致地提及‘精力差’这一内在状态，使行为具有人格连贯性，而轨迹A的决策理由较为单一且重复，缺乏这种内在逻辑的支撑。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "A",
+      "reason": "轨迹A在多次重复事件中保持了更一致的行为模式（如始终选择省钱、存钱、推辞社交），而轨迹B在后期出现了从焦虑到中性的情绪波动，略显不连贯。",
+      "winner_label": "baseline"
+    },
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "A",
+      "reason": "轨迹A在多次重复事件中保持了更一致的人格特质（如节俭、厌恶风险、社交回避），而轨迹B在后期频繁提及疲劳度，显得更机械且缺乏自然变化。",
+      "winner_label": "baseline"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "A",
+      "reason": "轨迹A在社交和消费上更一致地表现出外向和冲动倾向，而轨迹B在失业后持续焦虑并多次选择保守行为，但B在失业后求助朋友的行为与前期独立倾向略有矛盾，整体A更自然连贯。",
+      "winner_label": "baseline"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "A",
+      "reason": "轨迹A在疲劳和焦虑状态下持续选择省钱、休息和谨慎行动，情绪和决策前后一致，更符合真实人类在压力下的行为模式；而轨迹B情绪和消费行为反复跳跃，缺乏连贯性。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "A",
+      "reason": "轨迹A的情绪和决策更自然连贯，如失业后求助、涨薪后庆祝，而轨迹B反复强调‘太累’显得单调且前后矛盾（如失业后立刻高强度投简历与之前‘太累’冲突）。",
+      "winner_label": "baseline"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "A",
+      "reason": "轨迹A中人物状态（如精力、疲劳度）与决策一致，且情绪变化更自然，而轨迹B中人物在失业后仍接受跳槽机会，显得矛盾。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "A",
+      "reason": "轨迹A在多次事件中保持了一致的谨慎、疲惫和风险规避倾向，而轨迹B在跳槽机会上前后矛盾（先接受后婉拒），且情绪波动更频繁，显得不够自然连贯。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "A",
+      "reason": "轨迹A在连续事件中展现了更一致的人格特质（如疲劳时坚持省钱、失业后焦虑但理性应对），情绪变化更自然，而轨迹B的决策模式略显重复和机械。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "impulsive_hedonist",
+      "winner": "A",
+      "reason": "轨迹A的情绪和决策更连贯，失业后持续焦虑并谨慎消费，而轨迹B情绪波动大且前后矛盾，如失业后仍频繁庆祝和冲动消费。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "impulsive_hedonist",
+      "winner": "A",
+      "reason": "轨迹A中人物情绪和消费行为高度一致，始终冲动乐观，而轨迹B情绪波动更复杂，有犹豫和克制，但轨迹A更符合典型人类追求即时满足的连贯人格。",
+      "winner_label": "baseline"
+    },
+    {
+      "persona_id": "impulsive_hedonist",
+      "winner": "B",
+      "reason": "轨迹B在情绪和决策上更一致，面对失业和疾病时更谨慎，而轨迹A反复冲动消费后突然节俭，前后矛盾。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "ambitious_achiever",
+      "winner": "A",
+      "reason": "轨迹A中人物状态（疲劳、焦虑）与行为（省钱、推辞社交）高度一致，且面对类似事件反应稳定，更符合真实人类的人格连贯性；而轨迹B中人物在失业焦虑下仍频繁学习、社交，行为与情绪略有脱节。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "ambitious_achiever",
+      "winner": "A",
+      "reason": "轨迹A在多次重复事件中保持了更一致的情绪和决策模式（如持续选择在家省钱、礼貌推辞社交），且情绪变化更自然，而轨迹B在类似情境下偶尔出现矛盾（如突发疾病时先选择去医院后选择在家休息），显得不够连贯。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "ambitious_achiever",
+      "winner": "A",
+      "reason": "轨迹A在多次重复事件中保持了更一致的行为模式（如失业后始终高强度投简历、社交邀请始终推辞），而轨迹B在类似情境下情绪和决策波动较大，显得更生硬和矛盾。",
+      "winner_label": "baseline"
+    },
+    {
+      "persona_id": "easygoing_drifter",
+      "winner": "A",
+      "reason": "轨迹A的情绪和选择更自然连贯，能根据事件合理调整，而轨迹B反复强调‘太累’和‘焦虑’，显得单调且缺乏变化。",
+      "winner_label": "baseline"
+    },
+    {
+      "persona_id": "easygoing_drifter",
+      "winner": "A",
+      "reason": "轨迹A在多次重复事件中保持了更一致的行为模式（如失业后求助家人、跳槽时选择稳定），而轨迹B在跳槽机会上前后矛盾（先要求涨薪后接受），显得不够自然连贯。",
+      "winner_label": "baseline"
+    },
+    {
+      "persona_id": "easygoing_drifter",
+      "winner": "A",
+      "reason": "轨迹A在多次重复事件中保持了更一致的性格特征（如持续疲惫、焦虑），而轨迹B在失业时选择求助家人，与后续独立应对的风格略有矛盾。",
+      "winner_label": "experimental"
+    }
+  ]
+}

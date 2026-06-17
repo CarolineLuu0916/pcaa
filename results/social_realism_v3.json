@@ -1,0 +1,118 @@
+{
+  "experimental_win": 56,
+  "baseline_win": 28,
+  "tie": 17,
+  "num_comparisons": 18,
+  "condition_a": "experimental",
+  "condition_b": "baseline",
+  "detail": [
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "B",
+      "reason": "轨迹B中的行为和情绪变化更加连贯，特别是在面对失业、疾病和社交邀请时，都表现出了对财务和健康的担忧，这与之前的行为和情绪状态相匹配，显示出了更自然和一致的人格特征。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "tie",
+      "reason": "两段轨迹在行为选择和心情变化上都表现出了高度的一致性和连贯性，难以判断哪一段更像真实人类的行为模式。",
+      "winner_label": "tie"
+    },
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "B",
+      "reason": "轨迹B中的行为和情绪变化更加连贯，特别是在失业和涨工资时的情绪反应与选择更加符合真实人类的心理状态。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "A",
+      "reason": "轨迹A中的行为和情绪变化更符合真实人类在不同情境下的反应，如失业时寻求帮助、涨工资时庆祝等，而轨迹B中的行为和情绪较为单一，多表现为焦虑和节省开支。",
+      "winner_label": "baseline"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "A",
+      "reason": "轨迹A中的行为和情绪变化更符合一个连续的、有逻辑的个人经历，而轨迹B中的行为和情绪变化较为极端且不一致，缺乏连贯性。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "B",
+      "reason": "轨迹B的行为模式更连贯，反映了一个在不同情境下保持一致性的人物形象，如在经济压力下保持节俭，在情绪波动时保持冷静，这更符合真实人类的行为模式。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "tie",
+      "reason": "两段轨迹在行为选择和情绪反应上都表现出了较高的连贯性和真实性，难以判断哪一段更胜一筹。",
+      "winner_label": "tie"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "A",
+      "reason": "轨迹A的行为模式更连贯，反映了一个在不同情境下保持一致性的人物形象，如在涨工资时总是选择存钱，在失业时总是选择削减开支，而在突发疾病时则选择在家休息观察，这显示了一种谨慎且保守的人格特征。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "tie",
+      "reason": "两段轨迹在行为选择和情绪反应上都表现出了较高的连贯性和真实性，难以判断哪一段更胜一筹。",
+      "winner_label": "tie"
+    },
+    {
+      "persona_id": "impulsive_hedonist",
+      "winner": "A",
+      "reason": "轨迹A中的行为和情绪变化更符合一个焦虑且经济紧张的人在不同情境下的反应，而轨迹B中的行为与失业和经济紧张的情境不符，显得过于乐观和冲动。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "impulsive_hedonist",
+      "winner": "B",
+      "reason": "轨迹B的行为模式更符合真实人类在不同情境下的心理和行为反应，如在失业时的焦虑和积极寻找工作，以及在冲动消费时的犹豫和观望，显示了更自然的情绪波动和决策过程。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "impulsive_hedonist",
+      "winner": "B",
+      "reason": "轨迹B的行为模式在不同情境下表现出更多的情感波动和现实考量，更符合真实人类在面对生活变故时的心理和行为反应。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "ambitious_achiever",
+      "winner": "B",
+      "reason": "轨迹B中的行为选择和心情变化更符合逻辑连贯性，如在失业后立刻寻找工作、涨薪后适度庆祝并储蓄、面对健康问题时及时就医等，显示出较为一致的理性和前瞻性行为模式。",
+      "winner_label": "baseline"
+    },
+    {
+      "persona_id": "ambitious_achiever",
+      "winner": "A",
+      "reason": "轨迹A中的行为和情绪变化更符合真实人类在不同情境下的反应，如失业时的焦虑和寻找工作的紧迫感，以及在涨工资时适度奖励自己同时考虑储蓄的理智行为。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "ambitious_achiever",
+      "winner": "B",
+      "reason": "轨迹B中的行为和情绪变化更符合真实人类在不同情境下的反应，如在失业和疲劳时选择省钱和休息，而在涨工资时适度奖励自己，显示出更自然的情绪波动和行为连贯性。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "easygoing_drifter",
+      "winner": "A",
+      "reason": "轨迹A中的行为和情绪变化更自然连贯，而轨迹B中的情绪状态过于重复，缺乏变化。",
+      "winner_label": "baseline"
+    },
+    {
+      "persona_id": "easygoing_drifter",
+      "winner": "A",
+      "reason": "轨迹A中的行为和情绪变化更连贯，符合一个普通人在不同情境下的反应，而轨迹B中的行为在某些情况下（如连续高强度投简历找工作）显得过于单一和重复，缺乏真实性。",
+      "winner_label": "baseline"
+    },
+    {
+      "persona_id": "easygoing_drifter",
+      "winner": "B",
+      "reason": "轨迹B在面对不同情境时的选择和心情变化更加自然和连贯，更符合真实人类的行为模式。",
+      "winner_label": "baseline"
+    }
+  ]
+}

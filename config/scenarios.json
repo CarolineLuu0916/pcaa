@@ -1,0 +1,132 @@
+{
+  "scenarios": [
+    {
+      "id": "daily",
+      "name": "日常一天",
+      "description": "今天是普通的工作日，没有什么特殊的事情发生。",
+      "environment_effects": { "wealth_delta": 0, "energy_delta": 0, "fatigue_delta": 0.05, "mood_bias": null },
+      "action_categories": [
+        { "id": "frugal_routine", "label": "在家省钱度过", "prompt_hint": "不额外花钱，在家做饭、看书或休息", "wealth_delta": 0, "energy_delta": 0.05, "fatigue_delta": -0.05,
+          "trait_signal": { "frugality": 0.85, "social": 0.15, "risk_appetite": 0.1, "conscientiousness": 0.6, "openness": 0.2, "agreeableness": 0.5 } },
+        { "id": "social_routine", "label": "和朋友小聚", "prompt_hint": "约朋友吃饭或喝咖啡，花一点小钱", "wealth_delta": -80, "energy_delta": 0.1, "fatigue_delta": -0.05,
+          "trait_signal": { "frugality": 0.3, "social": 0.85, "risk_appetite": 0.3, "conscientiousness": 0.4, "openness": 0.5, "agreeableness": 0.7 } },
+        { "id": "leisure_spend", "label": "给自己买点小礼物", "prompt_hint": "买一件不算贵但能取悦自己的东西", "wealth_delta": -150, "energy_delta": 0.1, "fatigue_delta": -0.05,
+          "trait_signal": { "frugality": 0.2, "social": 0.3, "risk_appetite": 0.35, "conscientiousness": 0.3, "openness": 0.6, "agreeableness": 0.5 } },
+        { "id": "productive_routine", "label": "专注工作或学习新技能", "prompt_hint": "把时间投入工作或自我提升，几乎不花钱", "wealth_delta": -20, "energy_delta": -0.05, "fatigue_delta": 0.1,
+          "trait_signal": { "frugality": 0.6, "social": 0.15, "risk_appetite": 0.2, "conscientiousness": 0.9, "openness": 0.55, "agreeableness": 0.45 } }
+      ]
+    },
+    {
+      "id": "salary_raise",
+      "name": "涨工资",
+      "description": "公司刚刚通知你，从这个月起工资上涨 30%。",
+      "environment_effects": { "wealth_delta_pct": 0.3, "energy_delta": 0.05, "fatigue_delta": 0, "mood_bias": "happy" },
+      "action_categories": [
+        { "id": "save_all", "label": "把多出来的钱全部存起来", "prompt_hint": "几乎不增加任何消费，把涨薪部分全部存进储蓄账户", "wealth_delta": 0, "energy_delta": 0, "fatigue_delta": 0,
+          "trait_signal": { "frugality": 0.95, "social": 0.1, "risk_appetite": 0.05, "conscientiousness": 0.85, "openness": 0.2, "agreeableness": 0.45 } },
+        { "id": "spend_celebration", "label": "出去庆祝一下", "prompt_hint": "请朋友吃一顿大餐或买一件犒赏自己的东西", "wealth_delta": -600, "energy_delta": 0.15, "fatigue_delta": -0.1,
+          "trait_signal": { "frugality": 0.1, "social": 0.8, "risk_appetite": 0.5, "conscientiousness": 0.25, "openness": 0.65, "agreeableness": 0.65 } },
+        { "id": "balanced_treat", "label": "适度奖励自己，剩下存起来", "prompt_hint": "花一小部分犒赏自己，大部分仍然存起来", "wealth_delta": -200, "energy_delta": 0.1, "fatigue_delta": -0.05,
+          "trait_signal": { "frugality": 0.55, "social": 0.45, "risk_appetite": 0.25, "conscientiousness": 0.6, "openness": 0.4, "agreeableness": 0.55 } },
+        { "id": "invest_extra", "label": "把多出来的钱用于投资", "prompt_hint": "把涨薪部分投入理财或投资产品，承担一定风险换取回报", "wealth_delta": -300, "energy_delta": 0.05, "fatigue_delta": 0,
+          "trait_signal": { "frugality": 0.45, "social": 0.2, "risk_appetite": 0.75, "conscientiousness": 0.6, "openness": 0.6, "agreeableness": 0.4 } }
+      ]
+    },
+    {
+      "id": "job_loss",
+      "name": "失业",
+      "description": "你今天被通知公司裁员，从下个月起没有收入了。",
+      "environment_effects": { "wealth_delta_pct": 0, "income_stopped": true, "energy_delta": -0.2, "fatigue_delta": 0.1, "mood_bias": "anxious" },
+      "action_categories": [
+        { "id": "cut_expenses", "label": "立刻大幅削减开支", "prompt_hint": "取消一切非必要消费，重新规划预算", "wealth_delta": 0, "energy_delta": -0.05, "fatigue_delta": 0.05,
+          "trait_signal": { "frugality": 0.9, "social": 0.15, "risk_appetite": 0.1, "conscientiousness": 0.8, "openness": 0.2, "agreeableness": 0.4 } },
+        { "id": "seek_support", "label": "向家人朋友求助", "prompt_hint": "联系家人或朋友，寻求情感或经济上的支持", "wealth_delta": 100, "energy_delta": 0.1, "fatigue_delta": -0.05,
+          "trait_signal": { "frugality": 0.35, "social": 0.85, "risk_appetite": 0.3, "conscientiousness": 0.4, "openness": 0.45, "agreeableness": 0.75 } },
+        { "id": "job_search_intensive", "label": "立刻高强度投简历找工作", "prompt_hint": "把大部分时间精力投入到找新工作上", "wealth_delta": -50, "energy_delta": -0.1, "fatigue_delta": 0.15,
+          "trait_signal": { "frugality": 0.5, "social": 0.3, "risk_appetite": 0.3, "conscientiousness": 0.9, "openness": 0.5, "agreeableness": 0.45 } },
+        { "id": "denial_spend", "label": "暂时不改变生活方式", "prompt_hint": "先不调整消费习惯，假装一切如常", "wealth_delta": -400, "energy_delta": 0.05, "fatigue_delta": -0.05,
+          "trait_signal": { "frugality": 0.05, "social": 0.4, "risk_appetite": 0.85, "conscientiousness": 0.15, "openness": 0.55, "agreeableness": 0.4 } }
+      ]
+    },
+    {
+      "id": "social_invite",
+      "name": "社交邀请",
+      "description": "一个朋友邀请你这个周末一起参加聚会或者短途旅行。",
+      "environment_effects": { "wealth_delta": 0, "energy_delta": 0, "fatigue_delta": 0, "mood_bias": null, "social_weight_boost": 0.3 },
+      "action_categories": [
+        { "id": "accept_enthusiastic", "label": "立刻欣然答应", "prompt_hint": "马上答应，表现得很期待这次活动", "wealth_delta": -300, "energy_delta": 0.2, "fatigue_delta": -0.1,
+          "trait_signal": { "frugality": 0.15, "social": 0.9, "risk_appetite": 0.5, "conscientiousness": 0.3, "openness": 0.75, "agreeableness": 0.7 } },
+        { "id": "accept_reluctant", "label": "犹豫后答应", "prompt_hint": "权衡一番后还是答应了，但心理上不算特别热情", "wealth_delta": -200, "energy_delta": 0.05, "fatigue_delta": 0,
+          "trait_signal": { "frugality": 0.4, "social": 0.55, "risk_appetite": 0.35, "conscientiousness": 0.5, "openness": 0.5, "agreeableness": 0.6 } },
+        { "id": "decline_polite", "label": "礼貌推辞", "prompt_hint": "找一个委婉的理由推辞这次邀请", "wealth_delta": 0, "energy_delta": 0.05, "fatigue_delta": -0.05,
+          "trait_signal": { "frugality": 0.55, "social": 0.25, "risk_appetite": 0.2, "conscientiousness": 0.55, "openness": 0.3, "agreeableness": 0.6 } },
+        { "id": "decline_firm", "label": "直接拒绝", "prompt_hint": "明确表示不想参加，没有太多解释", "wealth_delta": 0, "energy_delta": 0, "fatigue_delta": 0,
+          "trait_signal": { "frugality": 0.6, "social": 0.1, "risk_appetite": 0.15, "conscientiousness": 0.5, "openness": 0.2, "agreeableness": 0.35 } }
+      ]
+    },
+    {
+      "id": "sudden_illness",
+      "name": "突发疾病",
+      "description": "你今天感觉身体不舒服，可能是生病了。",
+      "environment_effects": { "wealth_delta": 0, "energy_delta": -0.5, "fatigue_delta": 0.5, "mood_bias": "anxious" },
+      "action_categories": [
+        { "id": "immediate_medical", "label": "立刻去医院检查", "prompt_hint": "马上预约医生或去医院检查，花一些医疗费用", "wealth_delta": -500, "energy_delta": 0.1, "fatigue_delta": -0.1,
+          "trait_signal": { "frugality": 0.25, "social": 0.3, "risk_appetite": 0.15, "conscientiousness": 0.8, "openness": 0.4, "agreeableness": 0.55 } },
+        { "id": "self_care_rest", "label": "在家休息观察", "prompt_hint": "先在家多休息、多喝水，观察症状变化", "wealth_delta": -50, "energy_delta": 0.05, "fatigue_delta": -0.15,
+          "trait_signal": { "frugality": 0.6, "social": 0.15, "risk_appetite": 0.3, "conscientiousness": 0.6, "openness": 0.3, "agreeableness": 0.5 } },
+        { "id": "ignore_symptoms", "label": "不太在意，照常生活", "prompt_hint": "不太把这次不舒服当回事，照常上班生活", "wealth_delta": 0, "energy_delta": -0.1, "fatigue_delta": 0.1,
+          "trait_signal": { "frugality": 0.4, "social": 0.1, "risk_appetite": 0.85, "conscientiousness": 0.2, "openness": 0.35, "agreeableness": 0.35 } },
+        { "id": "seek_help_social", "label": "联系家人朋友帮忙", "prompt_hint": "告诉家人或朋友自己生病了，寻求陪伴或帮助", "wealth_delta": -100, "energy_delta": 0.1, "fatigue_delta": -0.1,
+          "trait_signal": { "frugality": 0.35, "social": 0.8, "risk_appetite": 0.3, "conscientiousness": 0.5, "openness": 0.4, "agreeableness": 0.7 } }
+      ]
+    },
+    {
+      "id": "career_switch",
+      "name": "跳槽机会",
+      "description": "一家竞争对手公司向你抛来橄榄枝，薪资比现在高 40%，但工作强度更大，且需要搬到另一个城市。",
+      "environment_effects": { "wealth_delta": 0, "energy_delta": 0.1, "fatigue_delta": 0, "mood_bias": null },
+      "action_categories": [
+        { "id": "accept_immediately", "label": "立刻接受，果断行动", "prompt_hint": "不多犹豫，马上答应，相信自己能适应新环境", "wealth_delta": 0, "energy_delta": 0.2, "fatigue_delta": 0.1,
+          "trait_signal": { "frugality": 0.3, "social": 0.5, "risk_appetite": 0.9, "conscientiousness": 0.4, "openness": 0.8, "agreeableness": 0.3 } },
+        { "id": "evaluate_then_accept", "label": "认真评估后接受", "prompt_hint": "列出利弊，权衡清楚后决定接受", "wealth_delta": 0, "energy_delta": 0.1, "fatigue_delta": 0.05,
+          "trait_signal": { "frugality": 0.45, "social": 0.45, "risk_appetite": 0.55, "conscientiousness": 0.9, "openness": 0.6, "agreeableness": 0.45 } },
+        { "id": "use_as_leverage", "label": "以此要求现公司涨薪", "prompt_hint": "拿这个 offer 去跟现公司谈，争取留下来且加薪", "wealth_delta": 0, "energy_delta": 0.05, "fatigue_delta": 0.05,
+          "trait_signal": { "frugality": 0.55, "social": 0.5, "risk_appetite": 0.5, "conscientiousness": 0.65, "openness": 0.45, "agreeableness": 0.35 } },
+        { "id": "decline_stability", "label": "婉拒，选择稳定", "prompt_hint": "觉得现在这份工作已经够好了，稳定比高薪更重要", "wealth_delta": 0, "energy_delta": 0, "fatigue_delta": -0.05,
+          "trait_signal": { "frugality": 0.6, "social": 0.35, "risk_appetite": 0.1, "conscientiousness": 0.65, "openness": 0.25, "agreeableness": 0.5 } }
+      ]
+    },
+    {
+      "id": "old_friend_reunion",
+      "name": "老友重逢",
+      "description": "一个多年未见的老朋友突然联系你想叙旧，但你记得他/她曾经让你失望过。",
+      "environment_effects": { "wealth_delta": 0, "energy_delta": 0, "fatigue_delta": 0, "mood_bias": null, "social_weight_boost": 0.2 },
+      "action_categories": [
+        { "id": "embrace_forgive", "label": "热情赴约，既往不咎", "prompt_hint": "决定放下过去的芥蒂，以开放心态重新建立联系", "wealth_delta": -150, "energy_delta": 0.15, "fatigue_delta": -0.05,
+          "trait_signal": { "frugality": 0.2, "social": 0.9, "risk_appetite": 0.55, "conscientiousness": 0.3, "openness": 0.8, "agreeableness": 0.85 } },
+        { "id": "meet_but_guarded", "label": "答应见面，保持距离", "prompt_hint": "去见面，但心里有所保留，不急于完全修复关系", "wealth_delta": -100, "energy_delta": 0.05, "fatigue_delta": 0,
+          "trait_signal": { "frugality": 0.35, "social": 0.55, "risk_appetite": 0.3, "conscientiousness": 0.65, "openness": 0.5, "agreeableness": 0.6 } },
+        { "id": "politely_decline", "label": "礼貌推辞", "prompt_hint": "找个委婉的理由推辞，觉得没必要重蹈覆辙", "wealth_delta": 0, "energy_delta": 0, "fatigue_delta": -0.05,
+          "trait_signal": { "frugality": 0.5, "social": 0.25, "risk_appetite": 0.2, "conscientiousness": 0.6, "openness": 0.3, "agreeableness": 0.5 } },
+        { "id": "ignore_contact", "label": "直接无视，已翻篇", "prompt_hint": "不回复，这段关系对你来说已经彻底结束了", "wealth_delta": 0, "energy_delta": 0, "fatigue_delta": 0,
+          "trait_signal": { "frugality": 0.5, "social": 0.1, "risk_appetite": 0.2, "conscientiousness": 0.5, "openness": 0.25, "agreeableness": 0.2 } }
+      ]
+    },
+    {
+      "id": "impulse_purchase",
+      "name": "冲动消费诱惑",
+      "description": "你刷手机时看到一件很想买的东西，价格约为月薪的三分之一，限时 24 小时打折，错过就要等下次。",
+      "environment_effects": { "wealth_delta": 0, "energy_delta": 0, "fatigue_delta": 0, "mood_bias": null },
+      "action_categories": [
+        { "id": "buy_now", "label": "立刻下单，别让自己后悔", "prompt_hint": "果断付款，享受当下比什么都重要", "wealth_delta": -800, "energy_delta": 0.1, "fatigue_delta": -0.05,
+          "trait_signal": { "frugality": 0.05, "social": 0.3, "risk_appetite": 0.75, "conscientiousness": 0.15, "openness": 0.7, "agreeableness": 0.45 } },
+        { "id": "add_to_cart_wait", "label": "加入购物车，观望几小时", "prompt_hint": "先收藏，冷静一下再决定要不要买", "wealth_delta": -800, "energy_delta": 0.05, "fatigue_delta": 0,
+          "trait_signal": { "frugality": 0.3, "social": 0.25, "risk_appetite": 0.45, "conscientiousness": 0.5, "openness": 0.55, "agreeableness": 0.4 } },
+        { "id": "defer_need_first", "label": "记下来，等真正有需要时再说", "prompt_hint": "克制冲动，记录需求，下次确定需要再买", "wealth_delta": 0, "energy_delta": 0, "fatigue_delta": 0,
+          "trait_signal": { "frugality": 0.65, "social": 0.2, "risk_appetite": 0.2, "conscientiousness": 0.75, "openness": 0.4, "agreeableness": 0.4 } },
+        { "id": "close_ignore", "label": "关掉页面，限时折扣是套路", "prompt_hint": "认为限时促销是营销手段，直接关掉不再想", "wealth_delta": 0, "energy_delta": 0, "fatigue_delta": -0.05,
+          "trait_signal": { "frugality": 0.9, "social": 0.15, "risk_appetite": 0.1, "conscientiousness": 0.8, "openness": 0.2, "agreeableness": 0.4 } }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "experimental_win": 50,
+  "baseline_win": 39,
+  "tie": 11,
+  "num_comparisons": 18,
+  "condition_a": "experimental_ga",
+  "condition_b": "baseline_ga",
+  "detail": [
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "A",
+      "reason": "轨迹A在社交邀请和疾病等情境中偶尔出现情绪波动（如anxious），且在第39轮选择‘答应见面，保持距离’，展现了更自然的人格连贯性和细微变化，而轨迹B过于一致和刻板，缺乏真实人类行为的灵活性。",
+      "winner_label": "baseline_ga"
+    },
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "tie",
+      "reason": "两段轨迹都表现出高度一致的节俭、规避风险、追求稳定的人格特征，且对类似事件（如失业、社交邀请）的反应模式几乎相同，难以区分更自然或更生硬。",
+      "winner_label": "tie"
+    },
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "tie",
+      "reason": "两段轨迹都表现出高度一致的节俭、规避风险和维持稳定的行为模式，且情绪反应连贯，难以区分哪个更自然。",
+      "winner_label": "tie"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "A",
+      "reason": "轨迹A在社交依赖上更一致且自然，而轨迹B在跳槽机会上表现出矛盾（接受与婉拒交替），且心情变化更突兀。",
+      "winner_label": "baseline_ga"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "A",
+      "reason": "轨迹A在社交依赖与独立尝试之间表现出更自然的波动和成长，而轨迹B则重复相同模式，显得机械且缺乏人格连贯性。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "A",
+      "reason": "轨迹A在社交依赖和情绪反应上更一致，失业时总向朋友求助，而轨迹B在跳槽机会上表现出独立评估，与整体依赖社交的模式略有矛盾。",
+      "winner_label": "baseline_ga"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "A",
+      "reason": "轨迹A在财务焦虑、社交回避和风险厌恶上高度一致，而轨迹B在第22、30、38轮接受了跳槽机会，与整体保守风格矛盾，显得不够连贯。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "A",
+      "reason": "轨迹A在多次重复事件中保持高度一致的行为模式（如每次涨工资都全部存起来、每次失业都立即削减开支），且情绪变化更符合行为逻辑，而轨迹B在突发疾病时两次选择去医院，与整体节俭风格略有矛盾。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "A",
+      "reason": "轨迹A在多次重复事件中保持高度一致的谨慎、风险厌恶和财务保守行为，如每次涨工资都全部存起来、每次失业都削减开支、每次社交都推辞，展现了强烈的人格连贯性；而轨迹B在跳槽机会上两次选择接受，与整体保守风格略有矛盾，显得不够自然。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "impulsive_hedonist",
+      "winner": "A",
+      "reason": "轨迹A在失业、疾病等负面事件后保持焦虑，庆祝时又转为快乐，情绪变化更自然且有连贯性；轨迹B则无论事件好坏都倾向于冲动享乐，情绪反应单一且缺乏真实感。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "impulsive_hedonist",
+      "winner": "A",
+      "reason": "轨迹A在失业时仍选择庆祝，行为与情绪矛盾，但整体更一致地追求即时快乐，而轨迹B在后期出现谨慎消费和评估跳槽，显得更理性，但A的冲动模式更贴近真实人类偶尔的自我矛盾。",
+      "winner_label": "baseline_ga"
+    },
+    {
+      "persona_id": "impulsive_hedonist",
+      "winner": "A",
+      "reason": "轨迹A在失业后仍频繁选择庆祝和社交，行为模式高度一致且缺乏对负面事件的合理应对，显得生硬重复；而轨迹B在失业时选择求助，并在老友重逢和冲动消费时表现出适度克制，更符合真实人类的情感连贯性和适应性。",
+      "winner_label": "baseline_ga"
+    },
+    {
+      "persona_id": "ambitious_achiever",
+      "winner": "A",
+      "reason": "轨迹A在重复情境中保持了一致的决策风格和情绪反应，如每次涨工资都选择适度奖励并存钱，每次失业都先投简历或削减开支，展现了更自然的人格连贯性；而轨迹B在社交邀请和突发疾病等情境中多次重复相同选择，显得机械且缺乏变化。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "ambitious_achiever",
+      "winner": "A",
+      "reason": "轨迹A在多次重复事件中保持了一致的决策风格（如失业时先投简历、疾病时先观察），情绪变化更自然连贯，而轨迹B在疾病处理上前后矛盾（先观察后立刻去医院），且部分决策显得过于功利化，缺乏真实人类的情感波动。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "ambitious_achiever",
+      "winner": "A",
+      "reason": "轨迹A在多次重复事件中展现了更丰富的决策细节和情绪变化，如失业时先投简历后削减开支，而轨迹B的决策模式较为单一重复，显得更机械。",
+      "winner_label": "baseline_ga"
+    },
+    {
+      "persona_id": "easygoing_drifter",
+      "winner": "B",
+      "reason": "轨迹B在社交和求助上更主动，情绪反应更自然连贯，而轨迹A重复模式过多，显得机械刻板。",
+      "winner_label": "experimental_ga"
+    },
+    {
+      "persona_id": "easygoing_drifter",
+      "winner": "A",
+      "reason": "轨迹A在多次重复事件中保持了一致的应对模式（如失业时选择暂时不改变、疾病时选择在家观察），而轨迹B在社交邀请和求助行为上变化较大，显得不够自然连贯。",
+      "winner_label": "baseline_ga"
+    },
+    {
+      "persona_id": "easygoing_drifter",
+      "winner": "A",
+      "reason": "轨迹A在社交、消费和应对压力时表现出更丰富的情感波动和人格连贯性，而轨迹B则显得重复且情绪反应较为单一。",
+      "winner_label": "experimental_ga"
+    }
+  ]
+}

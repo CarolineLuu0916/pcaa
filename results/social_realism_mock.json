@@ -1,0 +1,7 @@
+{
+  "experimental_win": 50,
+  "baseline_win": 30,
+  "tie": 20,
+  "num_comparisons": 6,
+  "detail": []
+}

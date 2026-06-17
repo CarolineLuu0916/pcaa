@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>实验面板 — PCAA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">PCAA <span>/</span> Persona-Constrained Agent Architecture</div>
+  <nav>
+    <a href="index.html">设计文档</a>
+    <a href="dashboard.html" class="active">实验面板</a>
+  </nav>
+</div>
+
+<div class="page" style="grid-template-columns: 1fr;">
+  <main style="max-width: 1040px; margin: 0 auto; width:100%;">
+
+    <div class="hero" style="border-bottom:none; margin-bottom: 18px; padding-bottom: 0;">
+      <div class="kicker">Experiment Dashboard</div>
+      <h1 style="font-size:30px;">实验对比面板</h1>
+      <div class="subtitle">Persona Lock（实验组）vs 纯 LLM（对照组）— 人格一致性 / 行为多样性 / 长期漂移 / 社会真实感</div>
+    </div>
+
+    <div class="dash-banner" id="dash-banner">
+      <span class="dash-banner-icon">⚠️</span>
+      <span class="dash-banner-text" id="dash-banner-text"></span>
+    </div>
+
+    <div class="dash-controls">
+      <div class="chip-group" id="persona-chips"></div>
+    </div>
+
+    <div class="summary-row" id="summary-row"></div>
+
+    <div class="panel-grid">
+      <div class="panel">
+        <h3>Persona Consistency — 滚动一致性曲线</h3>
+        <div class="panel-sub">每轮行为向量与初始 Hard Persona 的 cosine similarity（点选上方人格切换）</div>
+        <div id="chart-consistency"></div>
+        <div class="legend" id="legend-consistency"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Persona Drift — 人格漂移雷达图</h3>
+        <div class="panel-sub">第 1 轮 vs 最后一轮的 Hard Persona 六维数值（仅 Experimental 组持有数值化人格）</div>
+        <div id="chart-radar"></div>
+        <div class="legend" id="legend-radar"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Behavioral Diversity — 行为多样性对比</h3>
+        <div class="panel-sub">Shannon Entropy，三种人格 × 两种条件（陷阱检验：实验组不应被锁死成单一行为）</div>
+        <div id="chart-diversity"></div>
+        <div class="legend">
+          <span><span class="dot" style="background:#5B4FE5"></span>Experimental</span>
+          <span><span class="dot" style="background:#A6A4B0"></span>Baseline</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Social Realism — 盲测胜率</h3>
+        <div class="panel-sub">从两组各抽样 20 条轨迹做 A/B 盲测，判断"哪个更像真实人类"</div>
+        <div id="chart-realism"></div>
+        <div class="legend" id="legend-realism"></div>
+      </div>
+
+      <div class="panel wide">
+        <h3>轮次效应 & Baseline 架构效应</h3>
+        <div class="panel-sub">前两组对比轮次拉长（10→20）对 Social Realism 胜率的影响；第三组把对照组换成更贴近 Generative Agents 的记忆架构（retrieval+reflection+planning），看 PCAA 的优势是否还站得住</div>
+        <div id="chart-rounds-comparison"></div>
+        <div class="legend" id="legend-rounds-comparison"></div>
+      </div>
+
+      <div class="panel wide">
+        <h3>样本数据 — Agent-Round 记录</h3>
+        <div class="panel-sub">对应 <code>results/*.jsonl</code> 的行结构，真实实验跑完后这里展示抽样真实记录</div>
+        <div class="data-table-wrap">
+          <table>
+            <thead>
+              <tr><th>Persona</th><th>条件</th><th>轮次</th><th>场景</th><th>行为</th><th>Mood</th><th>Wealth</th></tr>
+            </thead>
+            <tbody id="sample-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <footer class="page-footer" id="page-footer"></footer>
+  </main>
+</div>
+
+<script src="js/dashboard-data.js?v=4"></script>
+<script src="js/dashboard.js?v=4"></script>
+</body>
+</html>

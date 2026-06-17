@@ -1,0 +1,62 @@
+{
+  "experimental_win": 89,
+  "baseline_win": 11,
+  "tie": 0,
+  "num_comparisons": 9,
+  "detail": [
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "B",
+      "reason": "轨迹B中的行为和情绪变化更符合真实人类在不同情境下的反应，如涨工资时适度奖励自己，失业时立刻削减开支，以及在疲劳和焦虑时选择休息和推辞社交邀请，这些行为表现出了更多的情感和决策的连贯性。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "B",
+      "reason": "轨迹B中的行为和情绪变化更符合真实人类在不同情境下的反应，如涨工资时适度奖励自己，失业时立刻削减开支，以及在疲劳和焦虑时选择休息，这些行为展现了更自然的情绪和决策连贯性。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "frugal_introvert",
+      "winner": "B",
+      "reason": "轨迹B中的行为和情绪变化更符合真实人类在不同情境下的反应，如在涨工资时适度奖励自己，失业时的焦虑和积极寻找工作，以及在突发疾病时选择在家休息观察，这些行为和情绪的连贯性更强，更自然。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "B",
+      "reason": "轨迹B中的行为模式更符合真实人类在不同情境下的心理和行为反应，如在涨工资时适度奖励自己并储蓄，失业时积极寻找工作机会，以及在突发疾病时根据情况选择就医或休息，显示了较为合理和连贯的决策过程。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "B",
+      "reason": "轨迹B的行为模式更连贯，表现出了在不同情境下对财务和健康的合理考虑，而轨迹A在失业和生病时的反应过于单一，缺乏变化。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "open_social",
+      "winner": "B",
+      "reason": "轨迹B中的行为和情绪变化更符合真实人类在不同情境下的反应，如涨工资时选择庆祝、失业时寻求帮助、生病时联系朋友，显示出更自然的情绪和行为连贯性。",
+      "winner_label": "baseline"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "B",
+      "reason": "轨迹B中的行为和情绪变化更符合一个连续经历焦虑和疲劳的人在不同情境下的反应，其行为选择和情绪变化具有一致性和连贯性。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "B",
+      "reason": "轨迹B中的行为和情绪变化更符合真实人类在面对连续压力和焦虑时的反应，表现出了适度的自我奖励和对财务的合理规划。",
+      "winner_label": "experimental"
+    },
+    {
+      "persona_id": "cautious_stable",
+      "winner": "B",
+      "reason": "轨迹B中的行为和情绪变化更符合真实人类在面对连续压力和焦虑时的反应，如适度奖励自己和在家休息观察疾病，显示了更自然的情绪波动和应对策略。",
+      "winner_label": "experimental"
+    }
+  ]
+}

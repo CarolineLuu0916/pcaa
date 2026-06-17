@@ -1,0 +1,16 @@
+.env
+*.env.local
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# Large raw run files (keep JSON result summaries, skip raw JSONL)
+results/*.jsonl
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
