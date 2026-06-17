@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCAA — Persona-Constrained Agent Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">PCAA <span>/</span> Persona-Constrained Agent Architecture</div>
+  <nav>
+    <a href="https://carolineluu.github.io/" style="font-size:13px;color:var(--ink-faint);display:flex;align-items:center;gap:5px;margin-right:8px;">← 返回展厅</a>
+    <a href="index.html" class="active">设计文档</a>
+    <a href="dashboard.html">实验面板</a>
+    <a href="#research-report" class="cta">研究报告</a>
+  </nav>
+</div>
+
+<div class="page">
+  <aside class="toc">
+    <div class="toc-title">目录</div>
+    <ol>
+      <li><a href="#research-report" style="color:var(--accent);font-weight:600;">★ 研究报告</a></li>
+      <li><a href="#motivation">1. 研究动机</a></li>
+      <li><a href="#related-work">2. 文献基础</a></li>
+      <li><a href="#architecture">3. 核心架构</a></li>
+      <li><a href="#algorithm">4. 行为生成算法</a></li>
+      <li><a href="#experiment-design">5. 实验设计</a></li>
+      <li><a href="#metrics">6. 评测指标</a></li>
+      <li><a href="#contributions">7. 贡献陈述</a></li>
+      <li><a href="#roadmap">8. 进度与路线图</a></li>
+      <li><a href="#research-log">9. 研究日志</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <div class="hero">
+      <div class="kicker">Working Paper · Short / Workshop Paper Draft</div>
+      <h1>人格应是 Agent 的先验，而非后验</h1>
+      <div class="subtitle">Persona-Constrained Agent Architecture (PCAA)：用结构化的两层人格模型约束生成式 Agent 的长期行为，缓解多智能体模拟中的同质化问题。</div>
+      <div class="meta">
+        <span><b>状态：</b>Phase 1 MVP 已完成（10/20 轮，真实结果见下）</span>
+        <span><b>目标：</b>arXiv 短论文 / workshop paper</span>
+        <span><b>对照基线：</b>文本人格 baseline（非完整 Generative Agents 复现，见 §09）</span>
+      </div>
+    </div>
+
+    <section class="block" id="research-report" style="background:linear-gradient(135deg,#f0edff 0%,#edf5ff 100%);border:1.5px solid #c8c0f5;border-radius:16px;padding:36px 40px 40px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+        <span style="background:var(--accent);color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;padding:4px 12px;border-radius:99px;">研究报告</span>
+        <span style="font-size:13px;color:var(--ink-faint);">Phase 1 完整回顾 · 2026</span>
+      </div>
+      <h2 style="font-family:var(--serif);font-size:clamp(22px,2.4vw,30px);margin:0 0 8px;color:var(--ink);">从一个想法到五个实验条件</h2>
+      <p style="font-size:16px;color:var(--ink-soft);margin:0 0 32px;line-height:1.6;">初始思路、关键调整、实验结论，与接下来要做什么。</p>
+
+      <div style="display:grid;gap:24px;">
+
+        <!-- 1. 初始想法 -->
+        <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:10px;">ORIGIN · 初始想法</div>
+          <p style="margin:0 0 10px;font-size:15px;">如果把 Agent 的"人格"从一段自然语言描述，变成一个六维数值向量（节俭度、社交性、风险偏好、尽责性、开放性、亲和性），并让这个向量<b>在每次决策前</b>充当贝叶斯先验——会不会让 Agent 的长期行为更稳定、更有辨识度？</p>
+          <p style="margin:0;font-size:15px;">这个想法来自一个观察：以 Generative Agents 为代表的主流范式是"后验人格"——Agent 先自由行动，再从记忆中反思出"我是谁"。人格是涌现的，因此容易被最近的记忆覆盖，在多轮模拟中趋于同质化。PCAA 翻转这个方向：<b>先验人格 → 约束行为边界</b>。</p>
+        </div>
+
+        <!-- 2. 研究问题 -->
+        <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:10px;">QUESTION · 核心研究问题</div>
+          <p style="margin:0 0 8px;font-size:15px;"><b>量化的先验人格约束，是否能让 Agent 产出更像真实人类的行为轨迹？</b></p>
+          <p style="margin:0;font-size:14px;color:var(--ink-soft);">评测方式：盲评配对比较（Social Realism）——Judge 模型读取两段匿名轨迹，选出哪段"看起来更像真实人类"。主评 Kimi，交叉验证 DeepSeek。</p>
+        </div>
+
+        <!-- 3. 实验历程 -->
+        <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:16px;">JOURNEY · 实验历程（五个关键转折）</div>
+          <div style="display:flex;flex-direction:column;gap:16px;">
+
+            <div style="display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;">1</div>
+              <div>
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px;">Bug 修复 → 漂移公式按场景改为按轮次触发</div>
+                <div style="font-size:13px;color:var(--ink-soft);">初版代码中人格向量每个 timestep 都在漂移，实际上 50 个 timestep 对应 10 轮，累积误差导致人格在 10 轮内就失去了初始特征。修复后改为每 5 个场景（一个 meta-round）平均一次漂移信号。</div>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;">2</div>
+              <div>
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px;">Prompt 重构 → 从"规则"改为"概率先验"</div>
+                <div style="font-size:13px;color:var(--ink-soft);">原始 prompt 把人格数值写成"你必须遵守的规则"，导致低值特质（如 frugality=0.2 的挥霍者）LLM 把数值当正整数而非小数理解，反向执行。改用"这些数字代表你的行为倾向概率，0=从不，1=总是"后，方向性错误消失。6-persona v3 实验（101次对比）：experimental 56%，baseline 28%，平局 17%。</div>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;">3</div>
+              <div>
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px;">Baseline 升级 → 朴素记忆换成 GA 式完整记忆</div>
+                <div style="font-size:13px;color:var(--ink-soft);">给对照组也配上 Generative Agents 式的 memory stream + retrieval + reflection + planning 后，PCAA 的优势<b>反转</b>（44:56）。发现：原先的优势有相当一部分来自记忆架构差异，而非约束层本身。这是研究最重要的诚实检验。</div>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;">4</div>
+              <div>
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px;">联合条件 → PCAA 叠在 GA 记忆之上：平局</div>
+                <div style="font-size:13px;color:var(--ink-soft);"><code>experimental_ga</code> = PCAA 约束层 + GA 式记忆（并行运行）vs <code>baseline_ga</code>。10 轮 Kimi 39:39（平局），20 轮 Kimi 56:33 / DeepSeek 39:61（两个 Judge 完全对立）。结论：叠加式不够——两套系统产生竞争信号，互相干扰而非协同。</div>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;">
+              <div style="width:32px;height:32px;border-radius:50%;background:#1F8A70;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;">5</div>
+              <div>
+                <div style="font-weight:600;font-size:14px;margin-bottom:4px;">整合条件 → 人格约束渗透进 GA 管道三处：当前最优</div>
+                <div style="font-size:13px;color:var(--ink-soft);"><code>experimental_pga</code>：①人格加权检索（30% 权重偏向有人格标识的记忆）②双层反思（行为层 + 人格层对比）③人格锚定规划（以先验为出发点定义本轮意图）。10 轮 Kimi 61:39，比叠加式+22pp。整合优于叠加。DeepSeek 仍偏向 baseline_ga（44:50），跨裁判分歧延续。</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 4. 关键结论 -->
+        <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">FINDINGS · 关键结论</div>
+          <div style="overflow-x:auto;">
+            <table style="font-size:13px;border-collapse:collapse;width:100%;">
+              <tr style="background:var(--accent-soft);">
+                <th style="text-align:left;padding:8px 12px;border-radius:6px 0 0 6px;">对比</th>
+                <th style="padding:8px 12px;">Kimi</th>
+                <th style="padding:8px 12px;">DeepSeek</th>
+                <th style="padding:8px 12px;border-radius:0 6px 6px 0;">轮次</th>
+              </tr>
+              <tr style="border-bottom:1px solid var(--line);">
+                <td style="padding:8px 12px;font-weight:500;">experimental vs baseline</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--good);font-weight:600;">56:28:17 ✓</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--good);font-weight:600;">56:44:0 ✓</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">10r</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--line);">
+                <td style="padding:8px 12px;font-weight:500;">experimental vs baseline（长轮次）</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--good);font-weight:600;">89:11:0 ✓✓</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">—</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">20r</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--line);">
+                <td style="padding:8px 12px;font-weight:500;">experimental_ga vs baseline_ga</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">39:39:22 ≈</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">50:39:11 ≈</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">10r</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--line);">
+                <td style="padding:8px 12px;font-weight:500;">experimental_ga vs baseline_ga</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--good);">56:33:11 ↑</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--bad);">39:61:0 ↓</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">20r</td>
+              </tr>
+              <tr>
+                <td style="padding:8px 12px;font-weight:600;color:var(--accent);">experimental_pga vs baseline_ga ★</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--good);font-weight:700;">61:39:0 ✓</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--bad);">44:50:6</td>
+                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">10r</td>
+              </tr>
+            </table>
+          </div>
+          <div style="margin-top:16px;display:grid;gap:8px;">
+            <div style="font-size:13px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;"><b>核心结论 1：</b>PCAA 对简单 baseline 有稳定优势，且随轮次增加（10r→20r：67%→89%）。</div>
+            <div style="font-size:13px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;"><b>核心结论 2：</b>PCAA 约束层的价值与它填补的"信息缺口"成正比——记忆越丰富，约束层的边际贡献越小。</div>
+            <div style="font-size:13px;padding:10px 14px;background:#f0faf6;border-left:3px solid var(--good);border-radius:0 8px 8px 0;"><b>核心结论 3（新）：</b>当人格约束整合进 GA 管道（而非叠加于其上）时，主评 Kimi 给出 61% 胜率——整合优于叠加。</div>
+            <div style="font-size:13px;padding:10px 14px;background:#fff8f8;border-left:3px solid var(--bad);border-radius:0 8px 8px 0;"><b>待解问题：</b>Kimi vs DeepSeek 的系统性逆转（对个别 persona 完全相反）是本研究最大的未解之谜，说明盲评指标本身存在模型偏差，需要第三个裁判家族验证。</div>
+          </div>
+        </div>
+
+        <!-- 5. 接下来 -->
+        <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">NEXT · 接下来要做什么</div>
+          <div style="display:grid;gap:10px;">
+            <div style="display:flex;gap:12px;align-items:start;font-size:14px;">
+              <span style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700;">①</span>
+              <span><b>experimental_pga 跑 20 轮</b>——验证轮次效应是否进一步拉开 Kimi 胜率（目前10轮已61%，预期更高）</span>
+            </div>
+            <div style="display:flex;gap:12px;align-items:start;font-size:14px;">
+              <span style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700;">②</span>
+              <span><b>引入第三个裁判家族</b>（GPT-4o 或 Claude）——解决 Kimi/DeepSeek 系统性逆转问题，三方一致才能写进论文结论</span>
+            </div>
+            <div style="display:flex;gap:12px;align-items:start;font-size:14px;">
+              <span style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700;">③</span>
+              <span><b>人格极端度作为显式变量</b>——把 6 个 persona 按特质偏差度分组，确认"中间值人格 PCAA 效力弱"的假说</span>
+            </div>
+            <div style="display:flex;gap:12px;align-items:start;font-size:14px;">
+              <span style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--ink-faint);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700;">④</span>
+              <span><b>Phase 2（100 轮）</b>——在更长时间维度检验同质化收敛曲线，补充 embedding-based 稳定性指标</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="block" id="motivation">
+      <h2><span class="num">01</span>研究动机</h2>
+      <p class="lede">当前主流生成式 Agent 范式存在一个方向性问题：人格是被"总结"出来的，而不是被"设定"出来的。</p>
+
+      <p>以 Stanford Generative Agents 为代表的范式遵循：<b>行为 → 记忆 → 反思 → 形成人格</b>。Agent 先自由行动，再从行为轨迹中反思归纳出"我是谁"。这种设计的问题是：人格是涌现的、不稳定的、容易被最近的记忆主导，长期模拟中容易出现<b>同质化（homogenization）</b>——不同初始设定的 Agent 在足够多轮交互后行为趋同。</p>
+
+      <p>PCAA 验证反向范式：<b>固定人格 → 约束行为边界 → 与环境交互 → 产出行为</b>。人格不是行为的总结，而是行为生成时的先验约束（Bayesian prior），如同人在做决策前已经携带的、相对稳定的倾向系统。</p>
+
+      <div class="callout">
+        <b>形式化定义</b>
+        <pre>Behavior = f(Persona, Memory, Environment, Event, Randomness)</pre>
+        <p style="margin:0">五个变量中，<b>Persona</b> 是慢变量（95% 继承 / 5% 漂移），其余随每轮场景与噪声变化。这个公式的学科祖先是 Kurt Lewin 1936 年的 <code>B = f(P, E)</code>。</p>
+      </div>
+    </section>
+
+    <section class="block" id="related-work">
+      <h2><span class="num">02</span>文献基础</h2>
+      <p class="lede">两条文献线索：AI/ML 领域的 Agent 架构（需要超越的 baseline），以及心理学/社会学的人格理论（论证概念创新性的根基）。</p>
+
+      <h3>2.1 AI / ML — Baseline 与对比对象</h3>
+      <table>
+        <tr><th>论文</th><th>年份</th><th>arXiv</th><th>与 PCAA 的关系</th></tr>
+        <tr><td>Generative Agents: Interactive Simulacra of Human Behavior</td><td>2023</td><td>2304.03442</td><td>核心 baseline，行为→记忆→反思范式的代表</td></tr>
+        <tr><td>MemGPT: Towards LLMs as Operating Systems</td><td>2023</td><td>2310.08560</td><td>长期记忆管理 SOTA，Memory 模块参考</td></tr>
+        <tr><td>ReAct: Synergizing Reasoning and Acting in LLMs</td><td>2023</td><td>2210.03629</td><td>推理-行动循环范式</td></tr>
+        <tr><td>CAMEL: Communicative Agents for "Mind" Exploration</td><td>2023</td><td>2303.17760</td><td>多 Agent 协作设计参考</td></tr>
+        <tr><td>Voyager: An Open-Ended Embodied Agent with LLMs</td><td>2023</td><td>2305.16291</td><td>技能学习与长期目标维持</td></tr>
+        <tr><td>Reflexion: Language Agents with Verbal RL</td><td>2023</td><td>2303.11366</td><td>自我反思机制对比</td></tr>
+        <tr><td>Constitutional AI: Harmlessness from AI Feedback</td><td>2022</td><td>2212.08073</td><td>最接近"人格宪法"约束思路</td></tr>
+      </table>
+
+      <h3>2.4 Agent 同质化与人格稳定（2024–2026）</h3>
+      <p>2024–2026 年出现了大量研究记录 LLM Agent 在长期交互中丧失个性的问题——这正是 PCAA 要解决的动机之一。</p>
+      <table>
+        <tr><th>论文</th><th>年份</th><th>arXiv</th><th>与 PCAA 的关系</th></tr>
+        <tr><td>Examining Identity Drift in Conversations of LLM Agents</td><td>2024</td><td>2412.00804</td><td>9个LLM跨轮次对话研究：越大模型漂移越大；指定persona未必能防漂移</td></tr>
+        <tr><td>Do as We Do, Not as You Think: the Conformity of LLMs (BenchForm)</td><td>2025</td><td>2501.13381</td><td>ICLR 2025 Oral；多Agent从众基准，权威错误时群体仍收敛——persona稳定性的压力测试</td></tr>
+        <tr><td>On the Dynamics of Multi-Agent LLM Communities Driven by Value Diversity</td><td>2025</td><td>2512.10665</td><td>Schwartz价值观引入多Agent；价值多样性提升群体稳定性——"人格差异不是噪声，而是能力"</td></tr>
+        <tr><td>Representational Collapse in Multi-Agent LLM Committees</td><td>2026</td><td>2604.03809</td><td>多Agent推理轨迹余弦相似度≈0.888，有效rank仅2.17/3.0；表征坍塌可量化，DALC方案</td></tr>
+        <tr><td>Multi-LLM Systems Exhibit Robust Semantic Collapse</td><td>2026</td><td>2605.17193</td><td>12种干预策略均失败；坍塌根源在自回归生成本身，不只是alignment偏差</td></tr>
+        <tr><td>The Chameleon's Limit: Persona Collapse and Homogenization in LLMs</td><td>2026</td><td>2604.24698</td><td>RLHF制造"Helpful Assistant"强吸引子，覆盖多样化persona初始化——需要架构层干预</td></tr>
+        <tr><td>SPASM: Stable Persona-driven Agent Simulation for Multi-turn Dialogue</td><td>2026</td><td>2604.09212</td><td>ECP（Egocentric Context Projection）从记忆检索层缓解drift；作用在Memory层，与PCAA的Constraint层互补</td></tr>
+        <tr><td>ContextEcho: A Benchmark for Persona Drift in Long Agentic-Coding Sessions</td><td>2026</td><td>2605.24279</td><td>部署规模漂移基准；关键发现：single-shot persona anchor能有效恢复初始人格——支持PCAA的固定参考向量设计</td></tr>
+      </table>
+
+      <h3>2.2 心理学 / 社会学 — 理论支撑</h3>
+      <table>
+        <tr><th>学者</th><th>著作</th><th>年份</th><th>核心概念</th><th>映射到 PCAA</th></tr>
+        <tr><td>Kurt Lewin</td><td>Principles of Topological Psychology</td><td>1936</td><td>B = f(P, E)</td><td>核心公式的学科祖先</td></tr>
+        <tr><td>Pierre Bourdieu</td><td>Le Sens Pratique</td><td>1980</td><td>Habitus（惯习）</td><td>Hard Persona</td></tr>
+        <tr><td>Erving Goffman</td><td>The Presentation of Self in Everyday Life</td><td>1956</td><td>拟剧论：前台/后台</td><td>Environment 参数</td></tr>
+        <tr><td>Mischel &amp; Shoda</td><td>A Cognitive-Affective System Theory of Personality</td><td>1995</td><td>CAPS 模型</td><td>两层 Persona 设计</td></tr>
+        <tr><td>Anthony Giddens</td><td>The Constitution of Society</td><td>1984</td><td>结构化理论</td><td>Memory 微调 Persona</td></tr>
+        <tr><td>George H. Mead</td><td>Mind, Self, and Society</td><td>1934</td><td>"I" vs "Me"</td><td>Agent-Agent 交互</td></tr>
+        <tr><td>William Fleeson</td><td>Structure- and process-integrated view of personality</td><td>2001</td><td>人格密度分布</td><td>概率行为而非确定行为</td></tr>
+        <tr><td>Shalom Schwartz</td><td>Universals in the Content and Structure of Values</td><td>1992</td><td>10维价值观圆形结构（Self-Direction/Achievement/Power/Security/Benevolence等）</td><td>比特质更稳定的价值观约束层，PCAA 未来扩展方向</td></tr>
+      </table>
+
+      <h3>2.3 与最相关工作的边界 — PCAA vs. DualMem</h3>
+      <p>2026 年新作 <i>From Facts to Insights: A Persona-Driven Dual Memory Framework and Dataset for Role-Playing Agents</i>（arXiv 2605.25693）提出 <b>DualMem</b>：用 Fact Memory（事实流）+ Insight Memory（洞见流）让记忆系统从"事实记录器"升级为"人格解释器"——同一事实，不同 persona 产生不同解释，解释结果写入记忆表达参与后续推理。初读高度疑似撞车，但拆开后边界是清楚的：两者作用在 Agent 系统的不同层级。</p>
+
+      <table>
+        <tr><th>维度</th><th>DualMem（2026）</th><th>PCAA（本文）</th></tr>
+        <tr><td>作用层级</td><td>Memory / Representation 层</td><td>Constraint / Behavior 层</td></tr>
+        <tr><td>persona 的角色</td><td>解释器——参与记忆内容生成</td><td>约束边界——只限制行为输出分布，不参与记忆生成</td></tr>
+        <tr><td>persona 是否写入记忆表达</td><td>是（Insight Memory）</td><td>否</td></tr>
+        <tr><td>drift 的处理</td><td>隐式解决（symptom，不显式测量）</td><td>显式建模为核心信号（可测、可约束、可优化）</td></tr>
+      </table>
+
+      <div class="callout quote">
+        "DualMem models persona as a conditioning signal for memory construction, whereas PCAA treats persona as an external constraint that regularizes behavior and enables explicit drift quantification independent of memory representation."
+      </div>
+      <p style="color:var(--ink-faint); font-size:13px">三层视角：Memory layer（DualMem 所在）→ Reasoning layer → Constraint layer（PCAA 所在）。Related work 段落写作时可直接复用这条边界论证。</p>
+
+      <h3>三层系统图</h3>
+      <div style="background:var(--card); border:1px solid var(--line); border-radius:12px; padding:10px 6px;">
+        <svg viewBox="0 0 720 470" style="width:100%; height:auto; display:block; font-family: var(--sans);">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink-faint)"></path>
+            </marker>
+            <marker id="arrowAccent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" style="fill:var(--accent)"></path>
+            </marker>
+          </defs>
+
+          <!-- Constraint Layer (PCAA) -->
+          <rect x="40" y="14" width="640" height="96" rx="12" style="fill:var(--accent-soft); stroke:var(--accent); stroke-width:2"></rect>
+          <text x="58" y="36" style="font-size:12px; font-weight:700; fill:var(--accent-deep); letter-spacing:0.04em;">CONSTRAINT LAYER — PCAA (this work)</text>
+          <rect x="58" y="48" width="280" height="48" rx="8" style="fill:var(--card); stroke:var(--accent); stroke-width:1.2"></rect>
+          <text x="198" y="68" text-anchor="middle" style="font-size:12px; fill:var(--ink);">Hard Persona (prior)</text>
+          <text x="198" y="84" text-anchor="middle" style="font-size:10.5px; fill:var(--ink-faint);">frugality / social / risk / ...</text>
+          <rect x="402" y="48" width="260" height="48" rx="8" style="fill:var(--card); stroke:var(--accent); stroke-width:1.2"></rect>
+          <text x="532" y="64" text-anchor="middle" style="font-size:12px; fill:var(--ink);">Drift Meter</text>
+          <text x="532" y="80" text-anchor="middle" style="font-size:10.5px; fill:var(--ink-faint);">rolling cosine similarity vs persona[0]</text>
+          <line x1="338" y1="72" x2="400" y2="72" marker-end="url(#arrowAccent)" style="stroke:var(--accent); stroke-width:1.6"></line>
+
+          <!-- arrow down to reasoning -->
+          <line x1="360" y1="110" x2="360" y2="150" marker-end="url(#arrow)" style="stroke:var(--ink-faint); stroke-width:1.6"></line>
+          <text x="372" y="134" style="font-size:10.5px; fill:var(--ink-faint);">persona-weighted action distribution</text>
+
+          <!-- Reasoning Layer -->
+          <rect x="40" y="158" width="640" height="64" rx="12" style="fill:var(--bg-alt); stroke:var(--ink-faint); stroke-width:1.4; stroke-dasharray:0"></rect>
+          <text x="58" y="178" style="font-size:12px; font-weight:700; fill:var(--ink-soft); letter-spacing:0.04em;">REASONING LAYER (shared substrate)</text>
+          <text x="58" y="198" style="font-size:12px; fill:var(--ink);">LLM Inference — ReAct-style loop</text>
+          <text x="58" y="212" style="font-size:10.5px; fill:var(--ink-faint);">Generative Agents / ReAct / Voyager / CAMEL 等共享此层</text>
+
+          <!-- arrow down to memory -->
+          <line x1="360" y1="222" x2="360" y2="262" marker-end="url(#arrow)" style="stroke:var(--ink-faint); stroke-width:1.6"></line>
+          <text x="372" y="246" style="font-size:10.5px; fill:var(--ink-faint);">behavior / new fact</text>
+
+          <!-- Memory Layer (DualMem) -->
+          <rect x="40" y="270" width="640" height="110" rx="12" style="fill:var(--code-bg); stroke:var(--ink-faint); stroke-width:1.4"></rect>
+          <text x="58" y="292" style="font-size:12px; font-weight:700; fill:var(--ink-soft); letter-spacing:0.04em;">MEMORY LAYER — DualMem (2026)</text>
+          <rect x="58" y="304" width="280" height="58" rx="8" style="fill:var(--card); stroke:var(--ink-faint); stroke-width:1.2"></rect>
+          <text x="198" y="328" text-anchor="middle" style="font-size:12px; fill:var(--ink);">Fact Memory</text>
+          <text x="198" y="344" text-anchor="middle" style="font-size:10.5px; fill:var(--ink-faint);">neutral event log</text>
+          <rect x="402" y="304" width="260" height="58" rx="8" style="fill:var(--card); stroke:var(--ink-faint); stroke-width:1.2"></rect>
+          <text x="532" y="324" text-anchor="middle" style="font-size:12px; fill:var(--ink);">Insight Memory</text>
+          <text x="532" y="340" text-anchor="middle" style="font-size:10px; fill:var(--ink-faint);">persona-conditioned</text>
+          <text x="532" y="352" text-anchor="middle" style="font-size:10px; fill:var(--ink-faint);">interpretation</text>
+          <line x1="338" y1="333" x2="400" y2="333" marker-end="url(#arrow)" style="stroke:var(--ink-faint); stroke-width:1.6"></line>
+
+          <!-- feedback arrow memory -> reasoning -->
+          <path d="M 662 304 C 700 250, 700 200, 660 190" style="fill:none; stroke:var(--ink-faint); stroke-width:1.4; stroke-dasharray:4,3" marker-end="url(#arrow)"></path>
+          <text x="690" y="248" transform="rotate(90 690 248)" style="font-size:10px; fill:var(--ink-faint);">retrieved insight</text>
+
+          <!-- drift feedback loop into persona (kept inside the constraint box to avoid colliding with the inter-layer arrow label) -->
+          <path d="M 532 96 C 532 106, 470 106, 320 97" style="fill:none; stroke:var(--accent); stroke-width:1.4; stroke-dasharray:4,3" marker-end="url(#arrowAccent)"></path>
+          <text x="450" y="104" text-anchor="middle" style="font-size:9.5px; fill:var(--accent-deep);">drift → 5%/round persona update</text>
+
+          <!-- footer note -->
+          <text x="360" y="412" text-anchor="middle" style="font-size:11px; fill:var(--ink-faint);">PCAA 的约束层与 DualMem 的记忆层作用在不同层级，可与共享的 Reasoning Layer 互补组合</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="block" id="architecture">
+      <h2><span class="num">03</span>核心架构</h2>
+      <p class="lede">两层人格模型：Hard Persona（几乎不可变的硬人格）与 Soft State（动态软状态）。</p>
+
+      <h3>3.1 Hard Persona — 慢变量</h3>
+      <pre>{
+  "frugality": 0.9,        // 节俭度 [0-1]
+  "social": 0.2,           // 社交性 [0-1]
+  "risk_appetite": 0.1,    // 风险偏好 [0-1]
+  "conscientiousness": 0.8,// 责任心 [0-1]
+  "openness": 0.3,         // 开放性 [0-1]
+  "agreeableness": 0.5     // 宜人性 [0-1]
+}</pre>
+      <p>更新规则：<code>persona[t+1] = 0.95 × persona[t] + 0.05 × delta</code>（每轮慢漂移，95% 继承 / 5% 漂移）。</p>
+
+      <h3>3.2 六维数值的理论依据</h3>
+      <p>六个维度的来源分两类：</p>
+      <table>
+        <tr><th>维度</th><th>对应 Big Five（OCEAN）</th><th>选取理由</th></tr>
+        <tr><td>openness（开放性）</td><td>Openness to Experience ✓</td><td>直接映射；对应探索型 vs. 日常例程型行为选项</td></tr>
+        <tr><td>conscientiousness（责任心）</td><td>Conscientiousness ✓</td><td>直接映射；对应计划性/自律相关的行为类别</td></tr>
+        <tr><td>social（社交性）</td><td>Extraversion（重命名）</td><td>改名更直观；所有社交场景的核心预测维度</td></tr>
+        <tr><td>agreeableness（宜人性）</td><td>Agreeableness ✓</td><td>直接映射；对应合作 vs. 以自我为中心的选择</td></tr>
+        <tr><td>frugality（节俭度）</td><td>无直接对应（领域专化）</td><td>场景集中 4/8 个场景直接涉及财务决策，Big Five 里没有维度直接捕捉消费倾向</td></tr>
+        <tr><td>risk_appetite（风险偏好）</td><td>无直接对应（领域专化）</td><td>职业与财务风险承受度；与 Neuroticism 有部分重叠但更直接映射到具体行为选项</td></tr>
+      </table>
+      <p><b>为什么没有 Neuroticism：</b>Big Five 里的 Neuroticism（神经质）衡量情绪不稳定性，这在 PCAA 里被放进了 Soft State 的 <code>mood</code> 字段（每轮由行为结果确定性更新），而不是放在 Hard Persona 里。我们的模型认为：情绪波动是动态状态属性，而不是稳定特质。</p>
+      <p><b>局限：</b>六维选择是基于当前 8 个场景集的工程决策，而非对心理学特质理论的实证验证。场景覆盖面扩大后（特别是若引入 Schwartz 价值观维度），当前的六维方案可能需要重新评估。</p>
+
+      <h3>3.3 Soft State — 每轮动态变量</h3>
+      <pre>{
+  "mood": "neutral",   // happy / neutral / sad / anxious
+  "energy": 0.7,        // [0-1]
+  "wealth": 5000,        // 当前财富
+  "fatigue": 0.1,        // 疲劳度 [0-1]
+  "recent_events": []    // 近期事件影响
+}</pre>
+      <p>由 Environment + Event 每轮完整更新，不参与慢漂移。</p>
+
+      <h3>3.4 三种预定义 Persona（MVP）</h3>
+      <div class="card-grid">
+        <div class="card">
+          <h4>吝啬内向型</h4>
+          <p>高节俭、低社交、低风险偏好，决策稳健保守。</p>
+          <div class="traits"><span class="tag">frugality .9</span><span class="tag">social .2</span><span class="tag">risk .1</span></div>
+        </div>
+        <div class="card">
+          <h4>开放社交型</h4>
+          <p>高开放性、高社交性，愿意尝试新事物与新关系。</p>
+          <div class="traits"><span class="tag">openness .8</span><span class="tag">social .85</span><span class="tag">risk .55</span></div>
+        </div>
+        <div class="card">
+          <h4>谨慎稳定型</h4>
+          <p>高责任心、中等宜人性，行为模式高度可预测。</p>
+          <div class="traits"><span class="tag">conscientious .85</span><span class="tag">risk .15</span><span class="tag">agreeable .6</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="algorithm">
+      <h2><span class="num">04</span>行为生成算法</h2>
+      <p class="lede">核心原则：人格决定决策的概率分布，而不是机械决定具体行为。</p>
+
+      <pre>ActionScore[i] =
+    0.50 × persona_weight[i]      // 人格倾向（主导）
+  + 0.25 × memory_weight[i]       // 经验影响
+  + 0.15 × environment_weight[i]  // 情境调整
+  + 0.05 × random_noise           // 偶然性
+
+最终行为 = Softmax(ActionScore) → 概率采样 Top-K</pre>
+
+      <div class="callout quote">
+        "吝啬的人（frugality=0.9）不是永远不去米其林，只是去米其林的概率是 5% 而不是 50%；内向的人（social=0.2）不是永远不参加聚会，只是概率更低。"
+      </div>
+
+      <h3>4.1 Agent Loop 伪代码</h3>
+      <pre>def agent_loop(persona, soft_state, memory, environment, event, rounds=100):
+    history = []
+    for round in range(rounds):
+        system_prompt = build_persona_prompt(persona)        # 1. 注入 Persona 约束
+        state_prompt = build_state_prompt(soft_state, environment, event)  # 2. 注入当前状态
+        memory_summary = compress_memory(memory)              # 3. 注入记忆摘要
+
+        behavior = call_llm(system_prompt + state_prompt + memory_summary)  # 4. 生成行为
+        history.append(behavior)                              # 5. 记录
+
+        soft_state = update_soft_state(soft_state, environment, event, behavior)  # 6. 更新软状态
+        memory.append(behavior)                               # 7. 更新记忆
+        persona = drift_persona(persona, rate=0.05)           # 8. 慢漂移人格
+        environment, event = next_scenario()                  # 9. 下一轮场景
+
+    return history</pre>
+
+      <h3>4.2 关键实现注意点</h3>
+      <ul>
+        <li><b>Persona Constraint 不是硬过滤</b>——不写 <code>if frugality &gt; 0.8: reject</code>，而是把人格权重注入 prompt，让 LLM 推理时自然倾向。</li>
+        <li><b>Baseline 公平性</b>——对照组也给角色描述（"你是一个吝啬内向的人"），但不给数值化的 Hard Persona JSON，差异只在是否有结构化定量约束层。</li>
+        <li><b>评测 blinding</b>——LLM-as-a-Judge 不知道轨迹来自哪一组。</li>
+        <li><b>温度参数</b>——行为生成 temperature=0.7，评测 temperature=0。</li>
+        <li><b>可复现性</b>——固定所有随机种子，记录到实验日志。</li>
+      </ul>
+    </section>
+
+    <section class="block" id="experiment-design">
+      <h2><span class="num">05</span>实验设计</h2>
+
+      <h3>5.1 MVP（最小可行实验）</h3>
+      <table>
+        <tr><th>参数</th><th>值</th></tr>
+        <tr><td>Persona 类型</td><td>3 种（吝啬内向型 / 开放社交型 / 谨慎稳定型）</td></tr>
+        <tr><td>实验条件</td><td>2 种（Persona Lock / 纯 LLM Baseline）</td></tr>
+        <tr><td>Agent 总数</td><td>3 × 2 = 6</td></tr>
+        <tr><td>模拟轮次</td><td>10 轮</td></tr>
+        <tr><td>场景模板</td><td>5 个</td></tr>
+        <tr><td>总 agent-round</td><td><b>300</b></td></tr>
+      </table>
+
+      <h3>5.2 完整实验</h3>
+      <table>
+        <tr><th>参数</th><th>值</th></tr>
+        <tr><td>Persona 类型</td><td>10 种（Big Five 维度系统采样）</td></tr>
+        <tr><td>模拟轮次</td><td>100 轮</td></tr>
+        <tr><td>场景模板</td><td>10 个</td></tr>
+        <tr><td>Agent 总数</td><td>20</td></tr>
+        <tr><td>总 agent-round</td><td><b>20,000</b></td></tr>
+      </table>
+
+      <h3>5.3 实验条件矩阵（含联合条件）</h3>
+      <table>
+        <tr><th>条件名</th><th>Persona 注入方式</th><th>记忆架构</th><th>状态</th></tr>
+        <tr><td><code>experimental</code></td><td>Hard Persona JSON + 方向解读 + drift</td><td>简单最近 5 条</td><td>✓ 已完成（v3）</td></tr>
+        <tr><td><code>baseline</code></td><td>纯文本描述（无数值约束/漂移）</td><td>简单最近 5 条</td><td>✓ 已完成（v3）</td></tr>
+        <tr><td><code>baseline_ga</code></td><td>纯文本描述</td><td>GA-style 完整流（retrieval + reflection + planning）</td><td>✓ 已完成（v1）</td></tr>
+        <tr><td><code>experimental_ga</code></td><td>Hard Persona JSON + 方向解读 + drift</td><td>GA-style 完整流</td><td>⏳ 计划中</td></tr>
+      </table>
+      <p><b>核心对比逻辑：</b> <code>experimental_ga</code> vs <code>baseline_ga</code> 直接回答：在 GA-style 记忆已存在的情况下，PCAA 约束层还能带来额外增益吗？——这是 §6.5 反转结果遗留的最重要未答问题。</p>
+
+      <h3>5.4 行为生成与 Judge 设置</h3>
+      <table>
+        <tr><th>角色</th><th>模型</th><th>说明</th></tr>
+        <tr><td>行为生成器</td><td>DeepSeek-V3（<code>deepseek-chat</code>）</td><td>所有条件共用同一个生成器，确保唯一自变量是 persona/memory 架构差异</td></tr>
+        <tr><td>Social Realism Judge（主评测）</td><td>Kimi（<code>moonshot-v1-8k</code>）</td><td>与生成器不同模型族（避免同源自评），支持 OpenAI 兼容 API，无 OpenAI key 时可用</td></tr>
+        <tr><td>Social Realism Judge（交叉验证）</td><td>DeepSeek-V3（<code>deepseek-chat</code>）</td><td>计划中：用 DeepSeek 重跑 v3 评测，验证结果不依赖 Kimi 的风格偏好</td></tr>
+      </table>
+      <div class="callout">
+        <b>已知评测局限：格式偏差风险</b><br>
+        实验组与 baseline 的 system prompt <em>格式</em>不同（JSON 块 vs 文本段落），DeepSeek 生成器可能在不同 prompt 格式下产生略不同的文本风格（词汇、节奏、话语标记），而 Kimi judge 可能对格式风格存在偏好。这一混淆因素需要格式对照消融实验来排除，目前尚未做，记为方法论局限写入论文 §6.1。
+      </div>
+
+      <h3>5.5 场景模板（Environment + Event）</h3>
+      <div class="card-grid">
+        <div class="card"><h4>① 日常一天</h4><p>正常工作日，无特殊事件</p></div>
+        <div class="card"><h4>② 涨工资</h4><p>收入 +30%，消费倾向临时 +0.3</p></div>
+        <div class="card"><h4>③ 失业</h4><p>收入归零，焦虑 mood，消费倾向 -0.5</p></div>
+        <div class="card"><h4>④ 社交邀请</h4><p>朋友邀请聚会/旅行，社交性权重临时提升</p></div>
+        <div class="card"><h4>⑤ 突发疾病</h4><p>energy -0.5, fatigue +0.5，需医疗支出</p></div>
+        <div class="card"><h4>⑥ 结婚纪念日</h4><p>mood=happy，消费倾向临时 +0.6</p></div>
+        <div class="card"><h4>⑦ 市场崩盘</h4><p>wealth -40%，risk_appetite -0.3</p></div>
+        <div class="card"><h4>⑧ 升职机会</h4><p>权衡风险/责任/收入的决策点</p></div>
+        <div class="card"><h4>⑨ 邻里冲突</h4><p>agreeableness 被挑战</p></div>
+        <div class="card"><h4>⑩ 独自旅行</h4><p>openness 被激活，社交需求降低</p></div>
+      </div>
+      <p style="color:var(--ink-faint); font-size:13px">MVP 阶段仅启用前 5 个场景，⑥–⑩ 留给完整实验。</p>
+    </section>
+
+    <section class="block" id="metrics">
+      <h2><span class="num">06</span>评测指标</h2>
+
+      <h3>6.1 Persona Consistency 人格一致性</h3>
+      <p>对比初始 Hard Persona 与多轮后的行为模式，用 Cosine Similarity（行为向量 vs 初始人格向量）+ LLM-as-a-Judge 打分（1–5）。<b>假设：实验组 &gt; 对照组。</b></p>
+
+      <h3>6.2 Behavioral Diversity 行为多样性</h3>
+      <p>统计所有 Agent 在所有轮次的行为分布，用 Shannon Entropy 衡量。<b>陷阱检验：</b>Persona Lock 不应导致所有 Agent 行为雷同——需要验证实验组没有因约束而僵化。</p>
+
+      <h3>6.3 Social Realism 社会真实感</h3>
+      <p>从两组各抽样 20 条行为轨迹，做 A/B 盲测（真人或 GPT-4o Judge 判断"哪个更像真实人类"）。<b>假设：实验组 &gt; 对照组。</b></p>
+
+      <h3>6.4 Long-term Stability 长期稳定性</h3>
+      <p>追踪多轮中行为模式的变化曲线，用滚动窗口（窗口长度 = 10 轮）Cosine Similarity，观察人格是否在后期崩塌（drift）。</p>
+    </section>
+
+    <section class="block" id="contributions">
+      <h2><span class="num">07</span>贡献陈述</h2>
+      <div class="callout quote">
+        We propose Persona-Constrained Agent Architecture (PCAA), which treats persona as a Bayesian prior constraining behavior generation, rather than a posterior label emergent from behavior — addressing the agent homogenization problem in long-term multi-agent simulations.
+      </div>
+      <ol>
+        <li><b>概念贡献</b>：将人格从"行为总结的标签"重新定义为"行为生成的约束条件"，通过两层人格模型（Hard Persona + Soft State）实现。</li>
+        <li><b>实证贡献</b>：通过对照实验证明 Persona Lock 能显著提升长期模拟中的人格一致性，同时保持行为多样性。</li>
+        <li><b>学科交叉贡献</b>：将 Bourdieu 的 Habitus、Lewin 的场论、Mischel 的 CAPS 模型引入 Agent 架构设计。</li>
+      </ol>
+    </section>
+
+    <section class="block" id="roadmap">
+      <h2><span class="num">08</span>进度与路线图</h2>
+
+      <h3>Phase 1 — MVP（先跑通再扩展）</h3>
+      <ul class="checklist">
+        <li class="done"><span class="box"></span><span>搭建项目骨架</span></li>
+        <li class="done"><span class="box"></span><span>实现 3 个预定义 Persona</span></li>
+        <li class="done"><span class="box"></span><span>实现 5 个场景模板</span></li>
+        <li class="done"><span class="box"></span><span>实现 Agent Loop（DeepSeek API）</span></li>
+        <li class="done"><span class="box"></span><span>实现 Baseline 对照组</span></li>
+        <li class="done"><span class="box"></span><span>跑 MVP 实验（300 agent-round，10 轮 + 20 轮两个版本）</span></li>
+        <li class="done"><span class="box"></span><span>实现 LLM-as-a-Judge 评测（Kimi/Moonshot）</span></li>
+        <li class="done"><span class="box"></span><span>输出结果：一致性分数、多样性熵值、长期稳定性、数据表格</span></li>
+      </ul>
+
+      <h3>Phase 2 — 扩展</h3>
+      <ul class="checklist">
+        <li><span class="box"></span><span>扩展至 10 Persona（Big Five 系统采样）</span></li>
+        <li><span class="box"></span><span>扩展至 10 场景 + 100 轮</span></li>
+        <li><span class="box"></span><span>完整实验跑 20,000 agent-round</span></li>
+        <li><span class="box"></span><span>文本嵌入级（非离散动作向量）稳定性指标</span></li>
+        <li class="done"><span class="box"></span><span>更贴近 Generative Agents 的完整基线（memory stream + reflection + planning）</span></li>
+        <li class="done"><span class="box"></span><span>撰写论文草稿</span></li>
+      </ul>
+
+      <div class="callout">
+        当前状态：<span class="status-pill dot">Phase 1 MVP 已跑完，真实数据已上线</span> — 实验面板已替换为真实实验数据（<code>demo=false</code>），10 轮与 20 轮两个版本均保留对比。每一步发现与决策见下方「研究日志」。
+        <br><a href="dashboard.html">→ 查看实验面板</a>
+      </div>
+    </section>
+
+    <section class="block" id="research-log">
+      <h2><span class="num">09</span>研究日志</h2>
+      <p class="lede">按时间顺序记录 Phase 1 MVP 跑完后的每一次发现、修正与决策——包括走过的弯路，不只是最终结果。</p>
+
+      <h3>1. Drift-rate bug：漂移公式被按 timestep 而不是按 round 触发</h3>
+      <p>初版 MVP（10 轮）Social Realism 盲测结果是 44% : 56%，落在假设的反方向。排查发现 <code>persona[t+1] = 0.95·persona[t] + 0.05·delta</code> 这条更新被每个 timestep（每个 agent 50 次）触发了一次，而不是每个 round（10 次）触发一次，导致 <code>0.95^50 ≈ 0.077</code>——10 轮模拟跑到一半，初始人格已经几乎被冲掉。只修这一个 bug、不改任何 prompt，结果翻转为 56% : 44%。</p>
+
+      <h3>2. Prompt 改写：把人格数值从"规则"重新框定为"概率先验"</h3>
+      <p>修完 bug 后 <code>cautious_stable</code> 这个 persona 仍然 0/3 输给 baseline，judge 给出的理由是"反复选择省钱和休息，缺乏灵活性"——LLM 把数值人格读成了硬规则。把 prompt 改写为显式的概率框架（直接引用 CLAUDE.md 里"省钱的人不是永远不去米其林，而是去的概率从 50% 降到 5%"的例子），并明确禁止"同一场景永远选同一类行为"。改写后 10 轮结果变为 67% : 33%，<code>cautious_stable</code> 变成 1/3。</p>
+
+      <h3>3. 轮次效应：同样的代码，20 轮比 10 轮的优势大得多</h3>
+      <p>不改代码，只把模拟轮次从 10 拉长到 20，Social Realism 从 67% : 33% 进一步拉大到 89% : 11%，<code>cautious_stable</code> 也从 1/3 变成 3/3 全胜。两个版本都保留在实验面板里（而不是用 20 轮替换 10 轮），因为这正好说明 PCAA 的优势本身是一个"需要足够长时间跨度才会显现"的效应——这也是为什么 Phase 2 必须做到 100 轮，而不是把 10 轮当作最终数字。</p>
+
+      <h3>4. 指标粒度缺口：自己的量化指标测不出 judge 看到的差距</h3>
+      <p>Persona Consistency、Diversity、新增的 Long-term Stability 三个指标都built在离散的 <code>trait_signal</code> 行为向量上，而 judge 评判的是自由文本 <code>behavior</code> 字段的叙事/情绪连贯性。结果是：Stability 在两个条件、两个轮次下都停在 0.98–1.0，没有反映出 Social Realism 从 56:44 到 89:11 的真实变化。这是一个诚实记录进论文（§6.3, §3）的方法论局限，不是把它藏起来——下一步是做一版基于文本 embedding 而不是离散动作类别的稳定性指标。</p>
+
+      <h3>5. Benchmark/baseline 诚实评估：我们现在到底在跟谁比？</h3>
+      <p>现有的"baseline"（每轮重复注入同一段文本人格描述，没有 memory retrieval/reflection/planning）并不是 Park et al. (2023) Generative Agents 的忠实复现，虽然 CLAUDE.md §5.1 把它列为"要超越的 baseline"。也没有使用任何已发表的公开 benchmark；persona/scenario 覆盖面仅 3 × 5、单一生活场景域。这些是当前 MVP 阶段性结论的真实边界，已写入论文 §7 Conclusion 作为待办，而不是回避。</p>
+
+      <h3>6. 评估复用 RoleMemo 公开 persona 的成本：暂时不可行</h3>
+      <p>DualMem/RoleMemo 论文（arXiv:2605.25693）声称数据集含 2,052 个 persona、20,244 条查询，但其官方仓库 <a href="https://github.com/role2026/rolememo" target="_blank" rel="noopener">github.com/role2026/rolememo</a> 目前只公开了 data pipeline 和训练/推理代码，README 明确写着 "RoleMemo dataset, model checkpoints, and full RL agent" 是 <b>coming soon</b>——persona 文件本身还没有发布，现在没法下载来用。</p>
+      <p>即使数据集发布，直接照搬其 QA/检索任务格式来测 PCAA 也不合适：RoleMemo 是长上下文（最长 256k token）事实检索 + 角色扮演问答任务，而 PCAA 评的是闭集行为选择 + 漂移量化 + 盲测真实感，两者任务形态完全不同，直接对比对双方都不公平。更可行的路径是只借用 RoleMemo 的 persona 文本描述（比我们自己设计的 3 个 persona 更丰富多样），喂给 PCAA 自己的评测协议（行为选择 + 漂移 + judge）跑——但 RoleMemo 的 persona 字段本身未公开 schema，需要先人工或 LLM 辅助把自由文本描述映射成 PCAA 的 6 维 Hard Persona 数值，这一步映射本身的有效性也需要在论文里说明清楚，不能假装是"原始数值"。</p>
+      <p>用我们自己 MVP 的真实耗时做了个量级估算：10 轮版本 300 条记录跑了约 6 分 23 秒（≈1.3 秒/次 DeepSeek 调用，顺序执行无并发），20 轮版本 600 条跑了约 14 分钟，与之吻合。按这个速率，每个 persona（2 条件 × 5 场景 × 10 轮 = 100 次调用）顺序跑大约 2 分钟；token 量级上每次调用约几百 token，按 DeepSeek-V3 当前价位估算单 persona 成本不到一美元，30–50 个 persona 的小规模复测在金钱和时间上都不是瓶颈——真正的瓶颈是数据集还没发布，以及 persona schema 转换的人工/校验成本。<b>结论：先记录这条路径可行，等仓库放出数据集之后再执行，现阶段不阻塞 Phase 2。</b></p>
+
+      <h3>7. 补上更贴近 Generative Agents 的 baseline：优势反转，不是消失而是反向</h3>
+      <p>条目 5 提出的质疑（我们现有的 baseline 没有 memory retrieval/reflection/planning，不是 Park et al. (2023) 的忠实复现）现在有了答案。新增 <code>baseline_ga</code> 条件：保持纯文本人格描述不变，把记忆子系统换成更贴近原论文的版本——带时间戳的 memory stream、按 recency（0.98/轮衰减）+ importance（LLM 1-10 打分）+ relevance 加权检索 top-k、累计 importance 超过阈值时触发一次 reflection（从近期记忆提炼 1-2 条更高层次感悟）、每轮还有一个显式 planning 步骤（先定一句话的心态基调再选行为）。诚实声明一个简化：relevance 用字符 bigram 频次向量的 cosine similarity 代替真正的文本 embedding，因为项目至今没有引入任何 embedding API 依赖——这比原论文的语义检索弱，论文里作为局限明确写出，不包装成原版复现。</p>
+      <p>10 轮下 <code>experimental</code> vs <code>baseline_ga</code> 的盲测结果是 <b>44% : 56%</b>——不是优势变小，是直接反转，三个 persona 里两个（<code>open_social</code> 0/3、<code>cautious_stable</code> 1/3）输给了升级后的 baseline。更值得记录的是：这一次 Persona Consistency 指标（<code>open_social</code> 0.795 vs 0.974）跟 judge 的结论是一致的——而条目 4 里这个指标恰恰测不出 67:33 那个差距。说明指标"测不出差距"未必是指标本身粒度太粗这一个原因，可能跟"在跟谁比"也有关系，这点之前没考虑到。结论写进论文 §6.5 和重写后的 §7：<b>PCAA 相对纯文本 baseline 的优势，目前看来部分依赖于那个 baseline 记忆系统的简陋程度</b>，而不只是来自"有没有结构化人格约束"这一个变量。下一步最值得做的实验是把 PCAA 的约束层和 GA 式记忆流结合起来跑，而不是把两者当作竞争方案。</p>
+      <h3>8. frugal_introvert 为何三组全胜：极端人格 → baseline 单调锁死</h3>
+      <p>三组对比里 <code>frugal_introvert</code> 都是 3/3 支持 experimental，乍看像是 PCAA 对"内向节俭"型人格效果格外好——实际原因更直白。查 judge 的 reason 字段，三组给的理由几乎一模一样：<em>"轨迹 B（experimental）在涨工资时选了适度奖励自己，失业时焦虑并大幅削减开支，疾病时选择在家休息观察；而轨迹 A 无论什么场景都选择省钱"</em>。</p>
+      <p>根本原因：<code>frugal_introvert</code> 的六维数值极度偏斜（frugality=0.9, social=0.2, risk_appetite=0.1），文本描述里的"非常节俭、不喜欢冒险"被 baseline LLM 读成了硬规则，导致它几乎所有场景都锁死在最省钱的选项上，行为完全单调。换成 GA-faithful baseline 也没解决这个问题——GA 的记忆流反思了的是过往"省钱"经历，只会强化同样的倾向。PCAA 的概率框架（"节俭 0.9 的人不是永远不花钱，而是花钱的概率从 50% 降到 10%"）反而让 agent 在涨工资等正面事件时偶尔"适度奖励自己"，judge 把这个弹性读成了更真实的人类反应。</p>
+      <p><b>含义：</b>这 100% 胜率不能简单解读为 PCAA 对极端人格特别有效，更准确的理解是：极端人格 + 纯文本描述 = baseline 行为极度单调，PCAA 的概率先验刚好修复了这个单调性。这是一个方法论上的混淆因素，在 Phase 2 的 10 persona 实验里，我们应该有意覆盖中间值人格（数值在 0.3–0.7 之间），观察胜率是否随人格极端程度系统性变化。当前新增的三个 persona（冲动享乐型、野心进取型、随性佛系型）有意把各维度的极端性分散开，覆盖更多中间地带，正是为了测试这个假设。</p>
+      <h3>9. Hard Persona prompt 对低值特质的方向盲区：impulsive_hedonist 完全反向</h3>
+      <p>把 persona 从 3 个扩展到 6 个（新增：冲动享乐型/野心进取型/随性佛系型）、场景从 5 个扩展到 8 个（新增：跳槽机会/老友重逢/冲动消费诱惑）后，运行 6×2×8×10=960 条记录的扩展实验。分析新 persona 的行为分布时发现了一个严重的 prompt 设计缺陷。</p>
+      <p><b>问题：</b><code>impulsive_hedonist</code>（frugality=0.1, social=0.75, risk=0.8, conscientiousness=0.2）的 experimental 条件从第 2 轮开始就锁死在 <code>frugal_routine</code>（最节俭的日常行为），10 轮下来有 9/10 的 daily 场景都选了最省钱选项——而 baseline 的行为恰恰相反，正确地表现出大量消费和社交行为（spend_celebration×10、buy_now×10、accept_enthusiastic×9）。对比漂移轨迹：frugality 从 0.1 漂移到 0.268，risk 从 0.8 降到 0.597——两轮"错误行为"之后的 persona drift 就形成了正反馈循环，越来越保守。</p>
+      <p><b>根本原因：</b>原来的 Hard Persona prompt 格式只用"frugality 很高的人去米其林概率降到 5%"做例子，没有明确说明低值的含义——LLM 把 frugality=0.1 读成"你有一点节俭倾向（10% 节俭）"，而不是"你极度倾向消费（节俭倾向仅 10%）"。这是一个特质命名方向和数值解读之间的混淆：特质名本身是正向的（高值=更节俭），但 LLM 需要自己推断低值意味着什么，而它往往推断错了。</p>
+      <p><b>修复（已实施）：</b>在 <code>build_persona_block()</code> 里增加每个维度的显式倾向解读，为每个数值直接生成自然语言说明：frugality=0.1 现在会显示"强烈偏向[极度爱消费/大方花钱，不在乎节省]（0.10，极低）"，而不是只给一个裸数字。这对极高值 persona 影响不大（frugal_introvert 的高值本来就容易被正确理解），但对低值 persona（冲动享乐型/随性佛系型）是关键修复。</p>
+      <p><b>含义（写入论文 §6.6）：</b>PCAA 的 Hard Persona 格式对"极高值特质"工作良好（frugal_introvert 三组全胜，且 §8 分析表明是 baseline 单调导致的优势），但对"极低值特质"存在方向盲区——LLM 不会自动把"特质值很低"翻译成"该特质的反方向行为"。这是数值型人格约束相比纯文本描述的一个已知局限，需要通过增加方向性语言解读来弥补，而不能假设 LLM 能正确推断所有数值方向。</p>
+
+      <h3>10. 理论定位升级：PCAA 在 2024–2026 研究谱系中的位置，以及核心研究问题的厘清</h3>
+      <p>借助对 2024–2026 Agent 趋同文献的系统梳理，厘清了 PCAA 的理论定位，并最终提炼出一个统一的研究问题。</p>
+      <p><b>研究谱系：</b>现有工作沿着一条从"发现问题"到"工程缓解"的路径演进——Choi et al. (2024) 记录了跨模型的 identity drift；BenchForm (2025) 发现多Agent系统中的从众压力；Huang et al. (2025) 证明 Schwartz 价值多样性能抵抗趋同；2026 年多篇论文（SPASM、ContextEcho、Representational Collapse）开始在不同层面（记忆层、表征层）提出缓解方案。PCAA 的定位不是"又一种减少 drift 的工程方案"，而是给这个问题提供一个显式可测量的约束层——漂移不再是需要事后检测的副作用，而是在架构设计时就被建模为第一类信号。</p>
+      <p><b>核心研究问题（写入论文 §1 Introduction）：</b> <em>Can LLM agents maintain a stable identity while remaining socially adaptive?</em> 这也是 Mischel &amp; Shoda (1995) CAPS 理论在 Agent 世界里的重现：特质稳定但情境敏感。PCAA 是这个问题的第一步近似答案——以特质先验约束行为分布，而非把人格当作记忆的副产品。</p>
+      <p><b>Persona vs. Identity 的边界：</b>AI 领域常说 Persona，但社会学里 Persona ≠ Identity。Persona 是外显角色；Identity 是稳定自我 + 社会角色 + 价值系统 + 生命叙事。PCAA 当前实现的是 trait constraint + behavior generation + drift measurement，严格说是在 Persona 层工作。因此论文不改名为 ICAA，但在叙述框架里引入 Identity 的理论层，写作策略是：<em>"PCAA: a persona-based approximation toward stable agent identity"</em>。</p>
+      <p><b>ContextEcho 关键发现与 PCAA 的对应：</b>ContextEcho 发现"一次性 persona anchor"（会话中途重新注入初始人格描述）能显著恢复已漂移的模型人格，这在实验上支持了 PCAA 的核心设计——<code>persona[0]</code> 向量作为不变参考点（而不是让人格随记忆自由更新）是一个load-bearing机制，不只是工程细节。</p>
+      <p><b>未来方向：</b>Schwartz Values 作为比 Big Five 更稳定的约束层（价值观变化比特质变化更慢）是 PCAA 自然的扩展方向，即在现有 6 维 trait 向量之上增加一个 Schwartz 价值观向量，形成 Trait Layer + Value Layer 的双层约束。Huang et al. (2025) 已经证明价值多样性有实质效果，可以作为这条路线的实验参照。</p>
+
+      <h3>11. v3 6-persona 实验结果：prompt 方向修复有效，发现新问题——中间值人格 PCAA 效力下降</h3>
+      <p>在修复 Hard Persona prompt 方向盲区（条目 9）后，重跑 6 persona × 8 场景 × 10 轮实验（<code>results/mvp_run_v3.jsonl</code>，960 条），并完成 Social Realism 盲测（Kimi/Moonshot judge，<code>results/social_realism_v3.json</code>）。</p>
+      <p><b>总体结果：</b>56% experimental / 28% baseline / 17% tie（共 101 次对比）。决出胜负的里 67% 支持 PCAA，与 3-persona 10 轮时的 67:33 高度一致——说明扩展到 6 个 persona 后整体优势结构稳定。</p>
+      <table>
+        <tr><th>Persona</th><th>Exp 胜</th><th>Base 胜</th><th>平局</th><th>结论</th></tr>
+        <tr><td>impulsive_hedonist（冲动享乐型）</td><td>3</td><td>0</td><td>0</td><td>✓✓ prompt 修复有效：v2 完全反向，v3 3/3 全胜</td></tr>
+        <tr><td>frugal_introvert（吝啬内向型）</td><td>2</td><td>0</td><td>1</td><td>✓ 稳健</td></tr>
+        <tr><td>open_social（开放社交型）</td><td>2</td><td>1</td><td>0</td><td>✓</td></tr>
+        <tr><td>ambitious_achiever（野心进取型）</td><td>2</td><td>1</td><td>0</td><td>✓ 新 persona，正常表现</td></tr>
+        <tr><td>cautious_stable（谨慎稳健型）</td><td>1</td><td>0</td><td>2</td><td>△ 平局居多，PCAA 略优但不决定性</td></tr>
+        <tr><td>easygoing_drifter（随性佛系型）</td><td>0</td><td>3</td><td>0</td><td>✗ 新问题：全部输给 baseline</td></tr>
+      </table>
+      <p><b>easygoing_drifter 失效根因：</b>该 persona 的 trait 数值高度集中在中间区间（frugality=0.45, social=0.55, risk=0.5, conscientiousness=0.15, openness=0.8, agreeableness=0.7）——除 conscientiousness 和 openness 外大多数维度接近 0.5。当 trait 值接近均匀分布时，PCAA 的概率先验几乎不给出方向性推力，agent 行为由 LLM 自身默认倾向主导；反而是 baseline 的纯文本描述（"你是个随性佛系的人"）给了 agent 更一致的性格定位。这揭示了 PCAA 的一个结构性局限：<b>先验约束对极端值人格最有效，对中间值人格效力递减</b>——因为中间值对应的概率分布最接近均匀，等于没有约束。</p>
+      <p><b>含义（写入论文 §6.7）：</b>PCAA 的有效性与 persona 的"极端程度"（deviation from 0.5）正相关。对于有强烈特征偏向的人格（冲动享乐型、吝啬内向型），概率先验给出明确方向，能跑赢纯文本描述；对于"佛系"型（大多数 trait 接近中间），概率先验退化为近似均匀分布，反而不如一段有叙事性格的文字有效。这暗示 PCAA 在设计 persona 时应该有意避免多维度同时取中间值——或者为中间值情况开发一套补充的文本描述激活机制。</p>
+
+      <h3>12. 双 judge 交叉验证：DeepSeek 独立评测复现 56% experimental 优势，消除单一 judge 偏差疑虑</h3>
+      <p>§6.1 已记录一个方法论风险：实验组（experimental）和对照组（baseline）的 system prompt 格式不同——experimental 是结构化 JSON block + 编号方向标签，baseline 是自由文本段落。Kimi judge 的风格偏好可能被这种格式差异混淆，而不是真正响应"哪段轨迹更像真实人类"。为此，用 <b>DeepSeek-chat（deepseek-chat）</b>作为第二个 judge，在完全相同的盲测协议下（条件标签去除、呈现顺序随机打乱）对同一份 v3 数据（<code>mvp_run_v3.jsonl</code>）独立重跑 Social Realism 评测。</p>
+      <p><b>总体结果对比：</b></p>
+      <table>
+        <tr><th>Judge</th><th>模型</th><th>Experimental 胜</th><th>Baseline 胜</th><th>平局</th></tr>
+        <tr><td>Kimi（主评）</td><td>moonshot-v1-8k</td><td><b>56%</b></td><td>28%</td><td>17%</td></tr>
+        <tr><td>DeepSeek（交叉验证）</td><td>deepseek-chat</td><td><b>56%</b></td><td>44%</td><td>0%</td></tr>
+      </table>
+      <p><b>方向一致：</b>两个来自不同公司/不同模型家族的 judge 均独立给出 56% experimental 优势——说明该结论不是 Kimi 的风格偏好，而是可跨 judge 复现的信号。特别注意：行为生成器本身用的是 DeepSeek，所以 DeepSeek 作为 judge 可能反而存在自评偏差（偏向自己模型生成的格式）；但 experimental 的胜率仍是 56%，说明即使在最不利的交叉条件下结论仍站得住。</p>
+      <p><b>平局分布差异：</b>DeepSeek 平局率为 0%（Kimi 17%），说明 DeepSeek 倾向于给出更果断的判断而不是留平局；Kimi 的平局被 DeepSeek 基本判给了 baseline，使 baseline 胜率从 28% 升至 44%。这是两个 judge 之间的裁判风格差异，不改变方向结论。</p>
+      <p><b>逐 persona 交叉对比：</b></p>
+      <table>
+        <tr><th>Persona</th><th>Kimi（exp/base/tie）</th><th>DeepSeek（exp/base/tie）</th><th>说明</th></tr>
+        <tr><td>ambitious_achiever</td><td>2/1/0</td><td>2/1/0</td><td>完全一致</td></tr>
+        <tr><td>impulsive_hedonist</td><td>3/0/0</td><td>2/1/0</td><td>基本一致；DeepSeek 给了 1 次 base 胜</td></tr>
+        <tr><td>easygoing_drifter</td><td>0/3/0</td><td>1/2/0</td><td>一致（两者均支持 baseline 优势）</td></tr>
+        <tr><td>cautious_stable</td><td>1/0/2</td><td>3/0/0</td><td>Kimi 平局 → DeepSeek 判为 exp 胜</td></tr>
+        <tr><td>frugal_introvert</td><td>2/0/1</td><td>1/2/0</td><td>分歧：Kimi 偏 exp，DeepSeek 偏 base</td></tr>
+        <tr><td>open_social</td><td>2/1/0</td><td>1/2/0</td><td>分歧：Kimi 轻微偏 exp，DeepSeek 轻微偏 base</td></tr>
+      </table>
+      <p><b>分歧模式：</b>两个 judge 在 <code>ambitious_achiever</code> 和 <code>impulsive_hedonist</code>（特质极端的 persona）上高度一致；在 <code>easygoing_drifter</code>（中间值失效案例）上也基本一致，都支持 baseline 优势。两个真正的分歧是 <code>frugal_introvert</code> 和 <code>open_social</code>——这两个 persona 在各自 judge 里胜负差距都不大（多数是 2:1），说明信号本身接近噪声水平，judge 个体偏好开始起主导作用。这与条目 11 的人格极端程度假设吻合：PCAA 的信号越强（trait 越极端），两个 judge 越一致；信号越弱，inter-judge 方差越大。</p>
+      <p><b>格式偏差问题的最终评估：</b>交叉验证部分缓解了格式偏差的顾虑——56% 的总体结论跨两个 judge 复现。但不能完全排除，因为 per-persona 的两个分歧案例（frugal_introvert / open_social）本身的真实信号可能就在噪声水平，格式偏差在这个区间内仍可能起作用。彻底排除需要格式匹配消融实验（experimental 内容 + baseline 格式，baseline 内容 + experimental 格式），这标记为 Phase 2 的一个实验变量。</p>
+
+      <h3>13. PCAA 约束层 + GA 式记忆联合条件（experimental_ga vs baseline_ga）：恢复平局，但无净增益</h3>
+      <p>条目 7 发现 PCAA experimental 对 baseline_ga（GA 式记忆对照）胜率反转（44:56）——这表明 PCAA 优于朴素 baseline 的优势，很大程度上来自记忆架构差异而非约束层本身。为此设计了第四个条件 <code>experimental_ga</code>：保留 PCAA 的 Hard Persona 约束层（系统提示 + reflection + planning 的每次 LLM 调用都注入结构化人格 block），同时配备与 baseline_ga 完全相同的 GA 式记忆（memory stream、retrieval、reflection、planning）。问题是：在记忆架构对等的情况下，PCAA 约束层还能带来可测量的增量吗？</p>
+      <p><b>结果（6 persona × 3 窗口 = 18 次对比）：</b></p>
+      <table>
+        <tr><th>Judge</th><th>模型</th><th>experimental_ga 胜</th><th>baseline_ga 胜</th><th>平局</th></tr>
+        <tr><td>Kimi（主评）</td><td>moonshot-v1-8k</td><td>39%</td><td>39%</td><td><b>22%</b></td></tr>
+        <tr><td>DeepSeek（交叉验证）</td><td>deepseek-chat</td><td>50%</td><td>39%</td><td>11%</td></tr>
+      </table>
+      <p><b>结论：约束层在 GA 式记忆存在时无明显净增益。</b>Kimi 打平（39:39），DeepSeek 略微偏向 exp_ga（50:39）但差距不显著，远低于条目 11 中 experimental vs baseline 的 56% 水平。与条目 7 的反转（44:56）对比，联合条件至少恢复了平局——说明加上 PCAA 约束不会损害效果，但在 10 轮内也无法检测到明显的增量收益。</p>
+      <p><b>逐 persona 对比：</b></p>
+      <table>
+        <tr><th>Persona</th><th>Kimi（exp_ga/base_ga/tie）</th><th>DeepSeek（exp_ga/base_ga/tie）</th><th>说明</th></tr>
+        <tr><td>ambitious_achiever</td><td>1/1/1</td><td>2/1/0</td><td>无明确胜者</td></tr>
+        <tr><td>cautious_stable</td><td>1/2/0</td><td>3/0/0</td><td>两个 judge 大幅分歧</td></tr>
+        <tr><td>easygoing_drifter</td><td>1/2/0</td><td>2/1/0</td><td>接近平局，方向不稳</td></tr>
+        <tr><td>frugal_introvert</td><td>0/0/3</td><td>0/1/2</td><td>两个 judge 均以平局为主</td></tr>
+        <tr><td>impulsive_hedonist</td><td>2/1/0</td><td>1/2/0</td><td>两个 judge 方向相反</td></tr>
+        <tr><td>open_social</td><td>2/1/0</td><td>1/2/0</td><td>两个 judge 方向相反</td></tr>
+      </table>
+      <p>逐 persona 分歧率很高（多个 persona 两个 judge 方向相反），说明在 n=3 的条件下，这些 persona 间的差异已接近噪声水平，无法从单 persona 结论中得出可靠推断。</p>
+      <p><b>三点结构（写入论文 §7 Conclusion）：</b>把三个条件对比放在一起，出现了一个统一的解释框架：</p>
+      <ol>
+        <li><b>experimental vs baseline（v3）：56:28:17（Kimi）</b>——PCAA 约束层在记忆架构劣势的对照下有明显优势</li>
+        <li><b>experimental vs baseline_ga（§6.5）：44:56</b>——baseline 升级到 GA 式记忆后，PCAA 约束层反转失效</li>
+        <li><b>experimental_ga vs baseline_ga（§6.9）：39:39:22（Kimi）/ 50:39:11（DS）</b>——两者记忆对等后，PCAA 约束层恢复平局但无净增益</li>
+      </ol>
+      <p>这三点共同指向同一个底层结构：<b>PCAA 约束层的价值与它填补的"信息缺口"成正比</b>——当上下文已经足够丰富（GA 式记忆提供了充足的行为连贯性）时，数值人格先验的额外定向力无法在 10 轮内产生可检测的增量。当上下文稀疏（朴素记忆 + 极端人格 profile）时，约束层的方向信息最有价值。</p>
+      <p><b>下一步最高优先级实验：</b>在 20–100 轮下重跑 experimental_ga vs baseline_ga——如果条目 3 的轮次效应在联合条件下同样成立，更长的记忆积累反而可能让约束层的定向力在两者都"记忆丰富"时重新拉开差距。</p>
+    </section>
+
+      <h3>14. 人格整合式 GA（experimental_pga vs baseline_ga）：整合优于叠加</h3>
+      <p>条目 13 显示"叠加式"联合条件（<code>experimental_ga</code> = PCAA 约束层并列于 GA 记忆之上）在 10 轮内无法超越 <code>baseline_ga</code>。一个自然的假设是：失败原因不在于 PCAA 约束层本身，而在于两套系统<b>并行运行、产生竞争信号</b>。为此设计了第五个条件 <code>experimental_pga</code>（Persona-integrated GA）：把人格约束渗透进 GA 记忆管道的每一步，而不是贴在外面。</p>
+      <p><b>三处核心改动：</b></p>
+      <ol>
+        <li><b>人格加权检索：</b>记忆检索得分加入人格相关度项（权重 30%）：<code>score = recency + importance + 0.7×场景相关度 + 0.3×人格相关度</code>，其中人格相关度用各 trait 维度的关键词展开与记忆内容做 bigram cosine 计算。</li>
+        <li><b>双层反思：</b>reflection 提示要求两层作答——行为层（我观察到什么行为模式？）和人格层（与人格先验对比，哪里吻合？哪里偏离？对自我理解意味着什么？），综合后写 1–2 句感悟入记忆流。</li>
+        <li><b>人格锚定规划：</b>planning 步骤明确以人格先验为出发点再结合情境定义当轮意图，而非单纯从情境和记忆推导 plan 后再外部约束。</li>
+      </ol>
+      <p><b>结果（6 persona × 3 窗口 = 18 次对比，10 轮）：</b></p>
+      <table>
+        <tr><th>Judge</th><th>模型</th><th>experimental_pga 胜</th><th>baseline_ga 胜</th><th>平局</th></tr>
+        <tr><td>Kimi（主评）</td><td>moonshot-v1-8k</td><td><b>61%</b></td><td>39%</td><td>0%</td></tr>
+        <tr><td>DeepSeek（交叉验证）</td><td>deepseek-chat</td><td>44%</td><td><b>50%</b></td><td>6%</td></tr>
+      </table>
+      <p><b>核心发现：Kimi 主评从叠加式的 39% 跳升至 61%（+22pp），说明整合优于叠加。</b>将四个条件的 10 轮得分并排比较：</p>
+      <table>
+        <tr><th>条件 A</th><th>条件 B</th><th>Kimi（A/B/tie）</th><th>DeepSeek（A/B/tie）</th></tr>
+        <tr><td>experimental</td><td>baseline</td><td>56/28/17</td><td>56/44/0</td></tr>
+        <tr><td>experimental_ga</td><td>baseline_ga</td><td>39/39/22</td><td>50/39/11</td></tr>
+        <tr><td><b>experimental_pga</b></td><td>baseline_ga</td><td><b>61/39/0</b></td><td>44/50/6</td></tr>
+      </table>
+      <p>DeepSeek 仍偏向 baseline_ga，与本研究贯穿始终的跨裁判分歧模式一致。</p>
+      <p><b>逐 persona 对比：</b></p>
+      <table>
+        <tr><th>Persona</th><th>Kimi（pga/base_ga/tie）</th><th>DeepSeek（pga/base_ga/tie）</th><th>说明</th></tr>
+        <tr><td>frugal_introvert</td><td>3/0/0</td><td>1/1/1</td><td>Kimi 大胜，DS 持平</td></tr>
+        <tr><td>open_social</td><td>2/1/0</td><td>1/2/0</td><td>方向轻微分歧</td></tr>
+        <tr><td>cautious_stable</td><td>0/3/0</td><td><b>3/0/0</b></td><td>完全反转</td></tr>
+        <tr><td>impulsive_hedonist</td><td>2/1/0</td><td>0/3/0</td><td>完全反转</td></tr>
+        <tr><td>ambitious_achiever</td><td>3/0/0</td><td>2/1/0</td><td>两个 judge 均倾向 pga</td></tr>
+        <tr><td>easygoing_drifter</td><td>1/2/0</td><td>1/2/0</td><td>两个 judge 均倾向 base_ga</td></tr>
+      </table>
+      <p><code>cautious_stable</code> 和 <code>impulsive_hedonist</code> 的完全反转复现了条目 13 中 <code>ambitious_achiever</code> 和 <code>easygoing_drifter</code> 的分歧模式。<code>easygoing_drifter</code>（两个 judge 均倾向 base_ga 的少数一致结论）可能与该 persona 特质极端度偏低有关——人格加权检索缺乏足够强的 persona 信号来拉开差距。</p>
+      <p><b>结论更新：</b>整合式架构（experimental_pga）是当前最优配置，主评 Kimi 下 61% 优于 baseline_ga。下一步最高优先级：在 20 轮下重跑 experimental_pga 验证轮次效应，并引入第三个裁判家族（如 GPT-4o 或 Claude）解决跨裁判逆转问题。</p>
+    </section>
+
+    <footer class="page-footer">PCAA Working Paper Draft · 内部设计文档，非最终发布版本</footer>
+  </main>
+</div>
+
+<script src="js/nav.js"></script>
+</body>
+</html>
