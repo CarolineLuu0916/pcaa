@@ -60,9 +60,11 @@
       <div style="display:grid;gap:28px;">
 
         <!-- 0. 30-second pitch -->
-        <div style="background:var(--accent);border-radius:12px;padding:24px 28px;color:#fff;">
-          <div style="font-size:11px;font-weight:700;letter-spacing:.12em;opacity:.75;margin-bottom:10px;">30 秒说清楚这个项目</div>
-          <p style="margin:0;font-size:17px;line-height:1.65;font-weight:500;">现有 AI Agent 有一个隐藏问题：给它一个"节俭内向"的人设，跑 20 轮之后它可能变得和"冲动外向"的 Agent 几乎一样——人格被最近的记忆覆盖，慢慢消失。我做了一个实验性架构 <b>PCAA</b>，把人格从"文字描述"变成"六维数值先验"，并让这个先验<b>在每次决策之前</b>介入，而不是让行为先发生再反思出人格。结果：在两种主流评估方式下，PCAA 都让 Agent 的行为轨迹更像真实人类——最优配置（整合式 GA）在主评测中以 <b>61% vs 39%</b> 胜出。</p>
+        <div style="background:linear-gradient(135deg,#eee9ff 0%,#eaf1ff 100%);border:1.5px solid #c8bef7;border-radius:12px;padding:26px 30px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--accent);margin-bottom:14px;">项目一句话定位</div>
+          <p style="margin:0 0 14px;font-size:16px;line-height:1.7;color:var(--ink);">给 AI Agent 设定「节俭内向」的人设，跑 20 轮后它可能和「冲动外向」的 Agent 几乎无法区分——<b>人格被近期记忆覆盖，慢慢消失</b>。这是当前主流 Agent 架构（Generative Agents 等）都面临的共性问题。</p>
+          <p style="margin:0 0 14px;font-size:16px;line-height:1.7;color:var(--ink);">我的方案 <b>PCAA</b>：把人格从「一段文字描述」变成「<b>六维数值先验向量</b>」，并让它在<b>每次行动选择之前</b>介入作为约束——不是先行动再反思出人格，而是先锚定人格再做决策。</p>
+          <p style="margin:0;font-size:16px;line-height:1.7;color:var(--ink);">实验结果：最优配置（人格整合进 GA 记忆管道三个环节）在双盲评测中以 <b style="color:var(--accent);">61% vs 39%</b> 胜出，且轮次越长优势越显著——10 轮 61%，20 轮升至 <b style="color:var(--accent);">89%</b>。</p>
         </div>
 
         <!-- 1. 问题背景 -->
