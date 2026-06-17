@@ -80,7 +80,7 @@
 
         <!-- 2. 方案架构 -->
         <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
-          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">ARCHITECTURE · 我设计了什么（技术概念平语言版）</div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">ARCHITECTURE · 核心架构设计</div>
 
           <p style="margin:0 0 16px;font-size:15px;">PCAA 的核心是两层人格模型，分别控制"长期稳定性"和"短期波动"：</p>
 
@@ -119,11 +119,11 @@
 
         <!-- 3. 实验设计 -->
         <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
-          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">METHODOLOGY · 实验设计（怎么验证，为什么这样验证）</div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">METHODOLOGY · 实验设计</div>
 
           <p style="margin:0 0 14px;font-size:15px;"><b>场景设计：</b>5 个日常生活场景（月薪变化、失业冲击、朋友邀约、冲动消费诱惑、突发疾病），每个场景提供 3–4 个行动选项（如"涨工资后立刻储蓄 / 犒劳自己消费 / 装作没事"）。每位 Agent 循环经历所有场景，称为一"轮"（Round）。</p>
 
-          <p style="margin:0 0 14px;font-size:15px;"><b>6 个人物原型（Persona）：</b></p>
+          <p style="margin:0 0 14px;font-size:15px;"><b>6 个人物原型：</b></p>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;font-size:13px;">
             <div style="background:var(--bg-alt);border-radius:8px;padding:10px 12px;"><b>frugal_introvert</b> — 节俭内向者（节俭0.9，社交0.1）</div>
             <div style="background:var(--bg-alt);border-radius:8px;padding:10px 12px;"><b>open_social</b> — 开放外向者（开放0.85，社交0.8）</div>
@@ -133,7 +133,7 @@
             <div style="background:var(--bg-alt);border-radius:8px;padding:10px 12px;"><b>easygoing_drifter</b> — 随遇而安者（各维度接近中间值0.5）</div>
           </div>
 
-          <p style="margin:0 0 14px;font-size:15px;"><b>评测方式——LLM-as-Judge 双盲配对比较（Social Realism）：</b></p>
+          <p style="margin:0 0 14px;font-size:15px;"><b>评测方式——双盲配对比较：</b></p>
           <div style="background:var(--code-bg);border-radius:8px;padding:14px 18px;font-size:13px;margin-bottom:12px;">
             把两段匿名行为轨迹（A 和 B，随机打乱哪边是 PCAA）呈现给 Judge 模型，要求它选择"哪段更像真实人类在这些情境下的自然反应"。主评模型 Kimi（moonshot-v1-8k），交叉验证 DeepSeek（deepseek-chat）。每对人格进行 3 次独立评测，共 6 personas × 3 = 18 次比较。
           </div>
@@ -142,7 +142,7 @@
 
         <!-- 4. 五轮实验 -->
         <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
-          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:16px;">EXPERIMENTS · 五轮实验迭代（每轮：做了什么 → 发现了什么 → 调整了什么）</div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:16px;">EXPERIMENTS · 五轮实验迭代</div>
           <div style="display:flex;flex-direction:column;gap:20px;">
 
             <div style="border-left:3px solid var(--accent);padding-left:16px;">
@@ -150,14 +150,14 @@
               <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);"><b>做了什么：</b>让 PCAA（数值先验）和 Baseline（文字描述人格，如"你是一个非常节俭的人"）各自跑 10 轮，比较行为轨迹。</p>
               <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);"><b>关键 Bug：</b>发现人格漂移公式被错误地按每个 timestep 触发（50次/agent），而应该是每完整经历 5 个场景后触发一次（10次/agent）。50 次漂移后 <code>0.95^50 ≈ 0.08</code>，初始人格几乎被冲掉。修复后改为每轮平均 5 个场景的行为信号再做一次漂移。</p>
               <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);"><b>另一个关键发现：</b>Prompt 设计问题——把人格数值写成"规则"（"你必须……"）时，LLM 把 0.2 当成正整数 2 来理解，高消费者反而变成极度节俭。改为"概率先验"框架（"0 代表从不，1 代表总是"）后行为方向正确。</p>
-              <div style="background:#f0faf6;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--good);">v3 结果（101 次比较，6 个 persona）：PCAA 56% vs Baseline 28%，平局 17%。两个 Judge 一致。✓</div>
+              <div style="background:#f0faf6;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--good);">结果（101 次评测，6 个人物原型）：PCAA 56% vs Baseline 28%，平局 17%，Kimi 与 DeepSeek 方向一致 ✓</div>
             </div>
 
             <div style="border-left:3px solid var(--accent);padding-left:16px;">
               <div style="font-weight:700;font-size:14px;margin-bottom:6px;">轮次 2：给 Baseline 配上 GA 式记忆 — 诚实检验</div>
               <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);"><b>做了什么：</b>把对照组升级为更接近 Stanford Generative Agents 的完整记忆系统（<b>GA 式记忆</b> = memory stream 记忆流 + relevance 相关检索 + reflection 定期反思 + planning 每轮提前规划）。这是为了分清"PCAA 赢是因为人格约束，还是因为记忆架构更好"。</p>
               <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);">
-                <b>GA 式记忆通俗解释：</b>类比人的记忆方式——① 把每件事都存下来（记忆流）；② 遇到新场景时优先想起"最近发生的、重要的、和当前情况最相关的"（检索公式：时间衰减 × 重要性 × 相关性）；③ 积累到一定量后做一次总结反思；④ 每轮开始前先想想"我今天打算怎么做"。比简单的"只记最近 5 件事"复杂得多。
+                <b>GA 式记忆是什么：</b>类比人的记忆方式——① 把每件事都存下来（记忆流）；② 遇到新场景时优先想起"最近发生的、重要的、和当前情况最相关的"（检索公式：时间衰减 × 重要性 × 相关性）；③ 积累到一定量后做一次总结反思；④ 每轮开始前先想想"我今天打算怎么做"。比简单的"只记最近 5 件事"复杂得多。
               </p>
               <div style="background:#fff8f8;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--bad);">结果：PCAA 44% vs baseline_ga 56%。优势反转。说明原先的优势中有相当部分来自记忆架构差异而非人格约束本身。</div>
               <p style="margin:6px 0 0;font-size:13px;color:var(--ink-soft);">这是这个研究最诚实也最重要的发现——面对真正的强 baseline，不能靠简单比较来证明价值。</p>
@@ -234,7 +234,7 @@
             </table>
           </div>
           <div style="display:grid;gap:8px;">
-            <div style="font-size:13px;padding:11px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;"><b>怎么解读这些百分比？</b>在每次盲评中，Judge 从两段匿名轨迹里选一段"更像真实人类"。56% 意味着在 56% 的配对比较中 PCAA 胜出，远高于随机猜测的 50%（有平局稀释后的有效胜率约 67%，在决出胜者的比较中）。89% 意味着 20 轮时几乎每次都选 PCAA——随轮次增加，人格差异越来越显著。</div>
+            <div style="font-size:13px;padding:11px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;"><b>如何读这些数字：</b>每次盲评中，Judge 从两段匿名轨迹里选出"更像真实人类"的那段。56% 意味着超过一半的配对里 PCAA 胜出；排除平局后决出胜负的比较中有效胜率约 67%。89% 意味着 20 轮时几乎每次都选 PCAA——轮次越长，人格差异越显著。</div>
             <div style="font-size:13px;padding:11px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;"><b>最重要的规律：</b>PCAA 约束层的价值与它填补的"信息缺口"成正比。当对照组记忆系统很弱时，人格数值先验提供了大量"这个人是谁"的信息（优势明显）；当对照组也有丰富记忆时，这个信息差缩小（优势下降）。<b>但整合式（experimental_pga）说明：人格先验渗透进记忆系统内部时，两者能协同而非竞争。</b></div>
             <div style="font-size:13px;padding:11px 16px;background:#fff8f8;border-left:3px solid var(--bad);border-radius:0 8px 8px 0;"><b>最大的未解问题：</b>Kimi 和 DeepSeek 在某些 persona 上评判方向完全相反（如 cautious_stable 一个给 3:0，另一个给 0:3）。这说明"社会真实感"本身是个主观指标，不同模型有不同的"什么叫像真实人"的内隐标准。这是方法论的局限，不是 PCAA 本身的问题——解决方案是引入第三个裁判家族和人工标注。</div>
           </div>
@@ -242,7 +242,7 @@
 
         <!-- 6. 三个最重要的 insight -->
         <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
-          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">INSIGHTS · 我学到了什么（三个值得迁移的 PM 思维）</div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">INSIGHTS · 三个核心洞察</div>
           <div style="display:grid;gap:14px;">
             <div style="display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;">
               <div style="font-size:22px;">💡</div>
@@ -289,7 +289,7 @@
 
         <!-- 8. 局限性 + 下一步 -->
         <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
-          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">LIMITS &amp; NEXT · 诚实的局限性 + 接下来要做什么</div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">LIMITS &amp; NEXT · 局限性与下一步</div>
           <div style="display:grid;gap:10px;margin-bottom:20px;font-size:13px;">
             <div style="padding:10px 14px;background:#fff8f8;border-left:3px solid var(--bad);border-radius:0 8px 8px 0;"><b>样本量：</b>每次评测 18 次配对比较（6 persona × 3 窗口）。在统计上属于探索性研究（pilot study），结论方向可信，具体数字不应过度解读。</div>
             <div style="padding:10px 14px;background:#fff8f8;border-left:3px solid var(--bad);border-radius:0 8px 8px 0;"><b>评测主观性：</b>LLM Judge 的"社会真实感"判断与人的判断未经校准。两个 Judge 模型在部分 persona 上完全逆转，说明该指标存在模型偏差，需要人工标注作为锚点。</div>
