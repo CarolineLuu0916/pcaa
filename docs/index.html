@@ -52,146 +52,254 @@
     <section class="block" id="research-report" style="background:linear-gradient(135deg,#f0edff 0%,#edf5ff 100%);border:1.5px solid #c8c0f5;border-radius:16px;padding:36px 40px 40px;">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
         <span style="background:var(--accent);color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;padding:4px 12px;border-radius:99px;">研究报告</span>
-        <span style="font-size:13px;color:var(--ink-faint);">Phase 1 完整回顾 · 2026</span>
+        <span style="font-size:13px;color:var(--ink-faint);">Phase 1 完整回顾 · 2026 · AI PM 项目陈述版</span>
       </div>
-      <h2 style="font-family:var(--serif);font-size:clamp(22px,2.4vw,30px);margin:0 0 8px;color:var(--ink);">从一个想法到五个实验条件</h2>
-      <p style="font-size:16px;color:var(--ink-soft);margin:0 0 32px;line-height:1.6;">初始思路、关键调整、实验结论，与接下来要做什么。</p>
+      <h2 style="font-family:var(--serif);font-size:clamp(22px,2.4vw,30px);margin:0 0 8px;color:var(--ink);">PCAA：给 AI Agent 一个稳定的"灵魂"</h2>
+      <p style="font-size:16px;color:var(--ink-soft);margin:0 0 32px;line-height:1.6;">从问题定义到五轮实验迭代，用数据回答"量化人格先验能不能让 Agent 更像真实人类"。</p>
 
-      <div style="display:grid;gap:24px;">
+      <div style="display:grid;gap:28px;">
 
-        <!-- 1. 初始想法 -->
-        <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
-          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:10px;">ORIGIN · 初始想法</div>
-          <p style="margin:0 0 10px;font-size:15px;">如果把 Agent 的"人格"从一段自然语言描述，变成一个六维数值向量（节俭度、社交性、风险偏好、尽责性、开放性、亲和性），并让这个向量<b>在每次决策前</b>充当贝叶斯先验——会不会让 Agent 的长期行为更稳定、更有辨识度？</p>
-          <p style="margin:0;font-size:15px;">这个想法来自一个观察：以 Generative Agents 为代表的主流范式是"后验人格"——Agent 先自由行动，再从记忆中反思出"我是谁"。人格是涌现的，因此容易被最近的记忆覆盖，在多轮模拟中趋于同质化。PCAA 翻转这个方向：<b>先验人格 → 约束行为边界</b>。</p>
+        <!-- 0. 30-second pitch -->
+        <div style="background:var(--accent);border-radius:12px;padding:24px 28px;color:#fff;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.12em;opacity:.75;margin-bottom:10px;">30 秒说清楚这个项目</div>
+          <p style="margin:0;font-size:17px;line-height:1.65;font-weight:500;">现有 AI Agent 有一个隐藏问题：给它一个"节俭内向"的人设，跑 20 轮之后它可能变得和"冲动外向"的 Agent 几乎一样——人格被最近的记忆覆盖，慢慢消失。我做了一个实验性架构 <b>PCAA</b>，把人格从"文字描述"变成"六维数值先验"，并让这个先验<b>在每次决策之前</b>介入，而不是让行为先发生再反思出人格。结果：在两种主流评估方式下，PCAA 都让 Agent 的行为轨迹更像真实人类——最优配置（整合式 GA）在主评测中以 <b>61% vs 39%</b> 胜出。</p>
         </div>
 
-        <!-- 2. 研究问题 -->
+        <!-- 1. 问题背景 -->
         <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
-          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:10px;">QUESTION · 核心研究问题</div>
-          <p style="margin:0 0 8px;font-size:15px;"><b>量化的先验人格约束，是否能让 Agent 产出更像真实人类的行为轨迹？</b></p>
-          <p style="margin:0;font-size:14px;color:var(--ink-soft);">评测方式：盲评配对比较（Social Realism）——Judge 模型读取两段匿名轨迹，选出哪段"看起来更像真实人类"。主评 Kimi，交叉验证 DeepSeek。</p>
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">BACKGROUND · 问题背景：为什么 AI Agent 的人格稳定性很重要</div>
+          <p style="margin:0 0 12px;font-size:15px;">2024–2026 年，AI Agent 越来越多地被用于角色扮演、用户陪伴、多智能体模拟（如虚拟城市、社交实验）。但学界和工业界都发现了同一个问题：</p>
+          <div style="background:#fff8f8;border-left:3px solid var(--bad);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:14px;font-size:14px;">
+            <b>Agent 同质化（Homogenization）：</b>不同初始人设的 Agent，经过多轮对话后行为越来越像。一项 2026 年的研究（arXiv:2604.03809）量化了这个现象——在三个 Agent 构成的委员会中，它们的推理轨迹余弦相似度高达 <b>0.888</b>，有效多样性几乎为零。另一项研究（arXiv:2604.24698）指出根本原因：RLHF 训练在模型内部形成了"助理人格"强吸引子，会把任何人设都往同一个方向拉。
+          </div>
+          <p style="margin:0 0 12px;font-size:15px;"><b>现有方案的局限：</b>主流 Generative Agents 范式（Stanford 2023）用"记忆→反思→形成人格"的路径，人格是行为的结果而不是约束。这意味着人格天然不稳定。直接在 prompt 里加人格描述（"你是一个节俭的人"）效果有限，因为随着对话轮次增加，近期记忆的权重会压过初始人设。</p>
+          <p style="margin:0;font-size:15px;"><b>PCAA 的切入角度：</b>不改模型、不微调——只改架构设计。把人格先验从"文字描述"变成"数值向量 + 决策约束机制"，让每次行动选择都经过人格先验的过滤。</p>
         </div>
 
-        <!-- 3. 实验历程 -->
+        <!-- 2. 方案架构 -->
         <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
-          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:16px;">JOURNEY · 实验历程（五个关键转折）</div>
-          <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">ARCHITECTURE · 我设计了什么（技术概念平语言版）</div>
 
-            <div style="display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;">
-              <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;">1</div>
-              <div>
-                <div style="font-weight:600;font-size:14px;margin-bottom:4px;">Bug 修复 → 漂移公式按场景改为按轮次触发</div>
-                <div style="font-size:13px;color:var(--ink-soft);">初版代码中人格向量每个 timestep 都在漂移，实际上 50 个 timestep 对应 10 轮，累积误差导致人格在 10 轮内就失去了初始特征。修复后改为每 5 个场景（一个 meta-round）平均一次漂移信号。</div>
+          <p style="margin:0 0 16px;font-size:15px;">PCAA 的核心是两层人格模型，分别控制"长期稳定性"和"短期波动"：</p>
+
+          <div style="display:grid;gap:12px;margin-bottom:20px;">
+            <div style="border:1px solid var(--line);border-radius:10px;padding:16px 18px;">
+              <div style="font-weight:700;font-size:14px;margin-bottom:6px;">第一层：Hard Persona（硬人格）— 慢变量</div>
+              <p style="margin:0 0 8px;font-size:13px;color:var(--ink-soft);">六个维度，每个维度是 0–1 之间的小数。可以理解为一个人的"底色性格"，不会因为今天发生了一件事就彻底改变。</p>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:12px;">
+                <div style="background:var(--accent-soft);border-radius:6px;padding:8px 10px;"><b>节俭度</b><br>frugality<br><span style="color:var(--ink-faint);">0=挥霍 / 1=极省</span></div>
+                <div style="background:var(--accent-soft);border-radius:6px;padding:8px 10px;"><b>社交性</b><br>social<br><span style="color:var(--ink-faint);">0=独处 / 1=热爱交际</span></div>
+                <div style="background:var(--accent-soft);border-radius:6px;padding:8px 10px;"><b>风险偏好</b><br>risk_appetite<br><span style="color:var(--ink-faint);">0=保守 / 1=冒险</span></div>
+                <div style="background:var(--accent-soft);border-radius:6px;padding:8px 10px;"><b>尽责性</b><br>conscientiousness<br><span style="color:var(--ink-faint);">0=随性 / 1=自律</span></div>
+                <div style="background:var(--accent-soft);border-radius:6px;padding:8px 10px;"><b>开放性</b><br>openness<br><span style="color:var(--ink-faint);">0=保守 / 1=探索</span></div>
+                <div style="background:var(--accent-soft);border-radius:6px;padding:8px 10px;"><b>亲和性</b><br>agreeableness<br><span style="color:var(--ink-faint);">0=强硬 / 1=随和</span></div>
               </div>
+              <p style="margin:12px 0 0;font-size:13px;color:var(--ink-soft);">这六个维度选自心理学的大五人格模型（Big Five Personality Traits），是目前学界共识最广的人格测量框架。每轮结束后，根据当轮行为的"倾向信号"做 5% 的小幅漂移——保持稳定但不完全僵硬，类似真实人的人格会随经历缓慢演变。</p>
             </div>
 
-            <div style="display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;">
-              <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;">2</div>
-              <div>
-                <div style="font-weight:600;font-size:14px;margin-bottom:4px;">Prompt 重构 → 从"规则"改为"概率先验"</div>
-                <div style="font-size:13px;color:var(--ink-soft);">原始 prompt 把人格数值写成"你必须遵守的规则"，导致低值特质（如 frugality=0.2 的挥霍者）LLM 把数值当正整数而非小数理解，反向执行。改用"这些数字代表你的行为倾向概率，0=从不，1=总是"后，方向性错误消失。6-persona v3 实验（101次对比）：experimental 56%，baseline 28%，平局 17%。</div>
-              </div>
+            <div style="border:1px solid var(--line);border-radius:10px;padding:16px 18px;">
+              <div style="font-weight:700;font-size:14px;margin-bottom:6px;">第二层：Soft State（软状态）— 快变量</div>
+              <p style="margin:0;font-size:13px;color:var(--ink-soft);">心情（平静/焦虑/开心/疲惫）、精力（0–1）、财富（数值）、疲劳度（0–1）。每个场景、每次行动之后即时更新。模拟人"今天状态好不好"对决策的短期影响——同一个人在精力充沛和极度疲惫时会做出不同选择。</p>
+            </div>
+          </div>
+
+          <div style="background:var(--code-bg);border-radius:8px;padding:14px 18px;font-size:13px;margin-bottom:12px;">
+            <b>每轮决策流程：</b><br>
+            ① 场景注入（涨工资了、突然失业、朋友邀约…）<br>
+            ② 读取 Hard Persona 数值 → 写入 LLM 系统提示："你的节俭度是 0.85，代表你有 85% 的概率选择节省开支的行为"<br>
+            ③ 读取记忆 → 给 LLM 提供过去的相关经历<br>
+            ④ LLM 生成行动选择 + 心情描述<br>
+            ⑤ 更新 Soft State，并把本轮行为写入记忆
+          </div>
+
+          <p style="margin:0;font-size:13px;color:var(--ink-soft);">与 Generative Agents 的关键差异：GA 的人格是从记忆中"归纳出来"的（后验），PCAA 的人格是"先设定好再约束行为"的（先验）。前者人格容易漂移，后者给了每次决策一个锚点。</p>
+        </div>
+
+        <!-- 3. 实验设计 -->
+        <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">METHODOLOGY · 实验设计（怎么验证，为什么这样验证）</div>
+
+          <p style="margin:0 0 14px;font-size:15px;"><b>场景设计：</b>5 个日常生活场景（月薪变化、失业冲击、朋友邀约、冲动消费诱惑、突发疾病），每个场景提供 3–4 个行动选项（如"涨工资后立刻储蓄 / 犒劳自己消费 / 装作没事"）。每位 Agent 循环经历所有场景，称为一"轮"（Round）。</p>
+
+          <p style="margin:0 0 14px;font-size:15px;"><b>6 个人物原型（Persona）：</b></p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;font-size:13px;">
+            <div style="background:var(--bg-alt);border-radius:8px;padding:10px 12px;"><b>frugal_introvert</b> — 节俭内向者（节俭0.9，社交0.1）</div>
+            <div style="background:var(--bg-alt);border-radius:8px;padding:10px 12px;"><b>open_social</b> — 开放外向者（开放0.85，社交0.8）</div>
+            <div style="background:var(--bg-alt);border-radius:8px;padding:10px 12px;"><b>cautious_stable</b> — 谨慎稳定者（风险0.1，尽责0.8）</div>
+            <div style="background:var(--bg-alt);border-radius:8px;padding:10px 12px;"><b>impulsive_hedonist</b> — 冲动享乐者（风险0.85，节俭0.15）</div>
+            <div style="background:var(--bg-alt);border-radius:8px;padding:10px 12px;"><b>ambitious_achiever</b> — 进取成就者（尽责0.9，风险0.7）</div>
+            <div style="background:var(--bg-alt);border-radius:8px;padding:10px 12px;"><b>easygoing_drifter</b> — 随遇而安者（各维度接近中间值0.5）</div>
+          </div>
+
+          <p style="margin:0 0 14px;font-size:15px;"><b>评测方式——LLM-as-Judge 双盲配对比较（Social Realism）：</b></p>
+          <div style="background:var(--code-bg);border-radius:8px;padding:14px 18px;font-size:13px;margin-bottom:12px;">
+            把两段匿名行为轨迹（A 和 B，随机打乱哪边是 PCAA）呈现给 Judge 模型，要求它选择"哪段更像真实人类在这些情境下的自然反应"。主评模型 Kimi（moonshot-v1-8k），交叉验证 DeepSeek（deepseek-chat）。每对人格进行 3 次独立评测，共 6 personas × 3 = 18 次比较。
+          </div>
+          <p style="margin:0;font-size:13px;color:var(--ink-soft);">为什么用 LLM 而不是人工打标？人工评测成本极高，且人对"行为一致性"的感知与 LLM 高度相关（本研究属于 MVP 验证阶段，后续扩大规模时需引入人工评测）。为什么两个 Judge？避免单一模型的偏见——Kimi 和 DeepSeek 属于不同模型家族，若两者一致说明信号更可靠。</p>
+        </div>
+
+        <!-- 4. 五轮实验 -->
+        <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:16px;">EXPERIMENTS · 五轮实验迭代（每轮：做了什么 → 发现了什么 → 调整了什么）</div>
+          <div style="display:flex;flex-direction:column;gap:20px;">
+
+            <div style="border-left:3px solid var(--accent);padding-left:16px;">
+              <div style="font-weight:700;font-size:14px;margin-bottom:6px;">轮次 1：基础版 PCAA vs 纯文字 Baseline — 验证基本假设</div>
+              <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);"><b>做了什么：</b>让 PCAA（数值先验）和 Baseline（文字描述人格，如"你是一个非常节俭的人"）各自跑 10 轮，比较行为轨迹。</p>
+              <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);"><b>关键 Bug：</b>发现人格漂移公式被错误地按每个 timestep 触发（50次/agent），而应该是每完整经历 5 个场景后触发一次（10次/agent）。50 次漂移后 <code>0.95^50 ≈ 0.08</code>，初始人格几乎被冲掉。修复后改为每轮平均 5 个场景的行为信号再做一次漂移。</p>
+              <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);"><b>另一个关键发现：</b>Prompt 设计问题——把人格数值写成"规则"（"你必须……"）时，LLM 把 0.2 当成正整数 2 来理解，高消费者反而变成极度节俭。改为"概率先验"框架（"0 代表从不，1 代表总是"）后行为方向正确。</p>
+              <div style="background:#f0faf6;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--good);">v3 结果（101 次比较，6 个 persona）：PCAA 56% vs Baseline 28%，平局 17%。两个 Judge 一致。✓</div>
             </div>
 
-            <div style="display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;">
-              <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;">3</div>
-              <div>
-                <div style="font-weight:600;font-size:14px;margin-bottom:4px;">Baseline 升级 → 朴素记忆换成 GA 式完整记忆</div>
-                <div style="font-size:13px;color:var(--ink-soft);">给对照组也配上 Generative Agents 式的 memory stream + retrieval + reflection + planning 后，PCAA 的优势<b>反转</b>（44:56）。发现：原先的优势有相当一部分来自记忆架构差异，而非约束层本身。这是研究最重要的诚实检验。</div>
-              </div>
+            <div style="border-left:3px solid var(--accent);padding-left:16px;">
+              <div style="font-weight:700;font-size:14px;margin-bottom:6px;">轮次 2：给 Baseline 配上 GA 式记忆 — 诚实检验</div>
+              <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);"><b>做了什么：</b>把对照组升级为更接近 Stanford Generative Agents 的完整记忆系统（<b>GA 式记忆</b> = memory stream 记忆流 + relevance 相关检索 + reflection 定期反思 + planning 每轮提前规划）。这是为了分清"PCAA 赢是因为人格约束，还是因为记忆架构更好"。</p>
+              <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);">
+                <b>GA 式记忆通俗解释：</b>类比人的记忆方式——① 把每件事都存下来（记忆流）；② 遇到新场景时优先想起"最近发生的、重要的、和当前情况最相关的"（检索公式：时间衰减 × 重要性 × 相关性）；③ 积累到一定量后做一次总结反思；④ 每轮开始前先想想"我今天打算怎么做"。比简单的"只记最近 5 件事"复杂得多。
+              </p>
+              <div style="background:#fff8f8;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--bad);">结果：PCAA 44% vs baseline_ga 56%。优势反转。说明原先的优势中有相当部分来自记忆架构差异而非人格约束本身。</div>
+              <p style="margin:6px 0 0;font-size:13px;color:var(--ink-soft);">这是这个研究最诚实也最重要的发现——面对真正的强 baseline，不能靠简单比较来证明价值。</p>
             </div>
 
-            <div style="display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;">
-              <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;">4</div>
-              <div>
-                <div style="font-weight:600;font-size:14px;margin-bottom:4px;">联合条件 → PCAA 叠在 GA 记忆之上：平局</div>
-                <div style="font-size:13px;color:var(--ink-soft);"><code>experimental_ga</code> = PCAA 约束层 + GA 式记忆（并行运行）vs <code>baseline_ga</code>。10 轮 Kimi 39:39（平局），20 轮 Kimi 56:33 / DeepSeek 39:61（两个 Judge 完全对立）。结论：叠加式不够——两套系统产生竞争信号，互相干扰而非协同。</div>
-              </div>
+            <div style="border-left:3px solid var(--accent);padding-left:16px;">
+              <div style="font-weight:700;font-size:14px;margin-bottom:6px;">轮次 3：PCAA + GA 记忆叠加 — 两套系统能否互补</div>
+              <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);"><b>做了什么：</b>给 PCAA 也配上 GA 式记忆（experimental_ga = PCAA 约束层 + GA 记忆，两套系统并行运行），再和 baseline_ga 比。</p>
+              <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);"><b>结果：</b>10 轮时 Kimi 39:39 平局，DeepSeek 50:39 略优。20 轮时 Kimi 56:33 / DeepSeek 39:61——两个 Judge <b>完全逆转</b>。</p>
+              <div style="background:var(--accent-soft);border-radius:8px;padding:10px 14px;font-size:13px;">解读：两套系统并列运行时产生竞争信号——人格数值系统认为"应该省钱"，而记忆反思系统可能刚刚记录了"上次我多社交了很开心"。两个方向互相干扰，结果不稳定。叠加式不够，需要整合。</div>
             </div>
 
-            <div style="display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start;">
-              <div style="width:32px;height:32px;border-radius:50%;background:#1F8A70;color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;flex-shrink:0;">5</div>
-              <div>
-                <div style="font-weight:600;font-size:14px;margin-bottom:4px;">整合条件 → 人格约束渗透进 GA 管道三处：当前最优</div>
-                <div style="font-size:13px;color:var(--ink-soft);"><code>experimental_pga</code>：①人格加权检索（30% 权重偏向有人格标识的记忆）②双层反思（行为层 + 人格层对比）③人格锚定规划（以先验为出发点定义本轮意图）。10 轮 Kimi 61:39，比叠加式+22pp。整合优于叠加。DeepSeek 仍偏向 baseline_ga（44:50），跨裁判分歧延续。</div>
+            <div style="border-left:3px solid var(--accent);padding-left:16px;">
+              <div style="font-weight:700;font-size:14px;margin-bottom:6px;">轮次 4：锚点漂移实验 — 防止人格收敛</div>
+              <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);"><b>做了什么：</b>在漂移公式中加入初始人格的"锚点"权重（α=0.1），防止人格长期运行后收敛到中间值。数学上：<code>persona[t+1] = 0.1 × persona[0] + 0.9 × (0.95 × persona[t] + 0.05 × delta)</code>，每次都把初始值拉回一点。</p>
+              <div style="background:var(--accent-soft);border-radius:8px;padding:10px 14px;font-size:13px;">Kimi 56% 胜出，但 DeepSeek 44:56 逆转。且对 frugal_introvert（节俭度本来就很高）反而更极端，变成"单调到不自然"。这说明 α=0.1 可能过强，或对极端人格需要阈值控制。</div>
+            </div>
+
+            <div style="border-left:3px solid #1F8A70;padding-left:16px;">
+              <div style="font-weight:700;font-size:14px;margin-bottom:6px;color:var(--good);">轮次 5（当前最优）：整合式 GA — 人格渗透进记忆管道三处 ★</div>
+              <p style="margin:0 0 6px;font-size:13px;color:var(--ink-soft);"><b>核心思路转变：</b>从"两套系统并行"改为"人格从内部渗透进记忆系统的每个环节"。</p>
+              <div style="display:grid;gap:8px;margin-bottom:10px;font-size:13px;">
+                <div style="background:#f0faf6;border-radius:8px;padding:10px 14px;"><b>① 人格加权检索：</b>记忆检索时，不只看"和当前场景有多相关"，还看"和自己的人格特质有多相关"（权重 30%）。节俭的人会优先想起自己做过省钱决定的记忆。</div>
+                <div style="background:#f0faf6;border-radius:8px;padding:10px 14px;"><b>② 双层反思：</b>定期反思时从两层作答——行为层（"我最近做了什么"）+ 人格层（"这和我的初始人格设定吻合吗？哪里偏离了？"）。让 Agent 自己意识到人格偏离。</div>
+                <div style="background:#f0faf6;border-radius:8px;padding:10px 14px;"><b>③ 人格锚定规划：</b>每轮开始前的"规划"步骤，明确要求以人格先验为出发点再结合当前情境，而不是先看情境再被人格外部约束。</div>
               </div>
+              <div style="background:#f0faf6;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;color:var(--good);">结果：Kimi 61:39 ✓（比叠加式的 39:39 提升 22pp）。整合优于叠加。</div>
             </div>
 
           </div>
         </div>
 
-        <!-- 4. 关键结论 -->
+        <!-- 5. 结果汇总 -->
         <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
-          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">FINDINGS · 关键结论</div>
-          <div style="overflow-x:auto;">
-            <table style="font-size:13px;border-collapse:collapse;width:100%;">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">RESULTS · 数据汇总与解读</div>
+          <div style="overflow-x:auto;margin-bottom:16px;">
+            <table style="font-size:13px;border-collapse:collapse;width:100%;min-width:520px;">
               <tr style="background:var(--accent-soft);">
-                <th style="text-align:left;padding:8px 12px;border-radius:6px 0 0 6px;">对比</th>
-                <th style="padding:8px 12px;">Kimi</th>
-                <th style="padding:8px 12px;">DeepSeek</th>
-                <th style="padding:8px 12px;border-radius:0 6px 6px 0;">轮次</th>
+                <th style="text-align:left;padding:9px 12px;border-radius:6px 0 0 6px;">实验条件</th>
+                <th style="padding:9px 12px;text-align:center;">Kimi 主评</th>
+                <th style="padding:9px 12px;text-align:center;">DeepSeek 验证</th>
+                <th style="padding:9px 12px;border-radius:0 6px 6px 0;text-align:center;">轮次</th>
               </tr>
               <tr style="border-bottom:1px solid var(--line);">
-                <td style="padding:8px 12px;font-weight:500;">experimental vs baseline</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--good);font-weight:600;">56:28:17 ✓</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--good);font-weight:600;">56:44:0 ✓</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">10r</td>
+                <td style="padding:9px 12px;">PCAA vs 文字 Baseline</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--good);font-weight:600;">56% : 28%</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--good);font-weight:600;">56% : 44%</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--ink-faint);">10 轮</td>
               </tr>
               <tr style="border-bottom:1px solid var(--line);">
-                <td style="padding:8px 12px;font-weight:500;">experimental vs baseline（长轮次）</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--good);font-weight:600;">89:11:0 ✓✓</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">—</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">20r</td>
+                <td style="padding:9px 12px;">PCAA vs 文字 Baseline（更长）</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--good);font-weight:700;">89% : 11%</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--ink-faint);">—</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--ink-faint);">20 轮</td>
               </tr>
               <tr style="border-bottom:1px solid var(--line);">
-                <td style="padding:8px 12px;font-weight:500;">experimental_ga vs baseline_ga</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">39:39:22 ≈</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">50:39:11 ≈</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">10r</td>
+                <td style="padding:9px 12px;">PCAA+GA（叠加）vs GA Baseline</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--ink-faint);">39% : 39%</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--ink-faint);">50% : 39%</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--ink-faint);">10 轮</td>
               </tr>
               <tr style="border-bottom:1px solid var(--line);">
-                <td style="padding:8px 12px;font-weight:500;">experimental_ga vs baseline_ga</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--good);">56:33:11 ↑</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--bad);">39:61:0 ↓</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">20r</td>
+                <td style="padding:9px 12px;">PCAA+GA（叠加）vs GA Baseline</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--good);">56% : 33%</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--bad);">39% : 61%</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--ink-faint);">20 轮</td>
               </tr>
-              <tr>
-                <td style="padding:8px 12px;font-weight:600;color:var(--accent);">experimental_pga vs baseline_ga ★</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--good);font-weight:700;">61:39:0 ✓</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--bad);">44:50:6</td>
-                <td style="padding:8px 12px;text-align:center;color:var(--ink-faint);">10r</td>
+              <tr style="background:#f5fdf9;">
+                <td style="padding:9px 12px;font-weight:700;color:var(--good);">PCAA+GA（整合式）vs GA Baseline ★</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--good);font-weight:700;">61% : 39%</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--bad);">44% : 50%</td>
+                <td style="padding:9px 12px;text-align:center;color:var(--ink-faint);">10 轮</td>
               </tr>
             </table>
           </div>
-          <div style="margin-top:16px;display:grid;gap:8px;">
-            <div style="font-size:13px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;"><b>核心结论 1：</b>PCAA 对简单 baseline 有稳定优势，且随轮次增加（10r→20r：67%→89%）。</div>
-            <div style="font-size:13px;padding:10px 14px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;"><b>核心结论 2：</b>PCAA 约束层的价值与它填补的"信息缺口"成正比——记忆越丰富，约束层的边际贡献越小。</div>
-            <div style="font-size:13px;padding:10px 14px;background:#f0faf6;border-left:3px solid var(--good);border-radius:0 8px 8px 0;"><b>核心结论 3（新）：</b>当人格约束整合进 GA 管道（而非叠加于其上）时，主评 Kimi 给出 61% 胜率——整合优于叠加。</div>
-            <div style="font-size:13px;padding:10px 14px;background:#fff8f8;border-left:3px solid var(--bad);border-radius:0 8px 8px 0;"><b>待解问题：</b>Kimi vs DeepSeek 的系统性逆转（对个别 persona 完全相反）是本研究最大的未解之谜，说明盲评指标本身存在模型偏差，需要第三个裁判家族验证。</div>
+          <div style="display:grid;gap:8px;">
+            <div style="font-size:13px;padding:11px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;"><b>怎么解读这些百分比？</b>在每次盲评中，Judge 从两段匿名轨迹里选一段"更像真实人类"。56% 意味着在 56% 的配对比较中 PCAA 胜出，远高于随机猜测的 50%（有平局稀释后的有效胜率约 67%，在决出胜者的比较中）。89% 意味着 20 轮时几乎每次都选 PCAA——随轮次增加，人格差异越来越显著。</div>
+            <div style="font-size:13px;padding:11px 16px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;"><b>最重要的规律：</b>PCAA 约束层的价值与它填补的"信息缺口"成正比。当对照组记忆系统很弱时，人格数值先验提供了大量"这个人是谁"的信息（优势明显）；当对照组也有丰富记忆时，这个信息差缩小（优势下降）。<b>但整合式（experimental_pga）说明：人格先验渗透进记忆系统内部时，两者能协同而非竞争。</b></div>
+            <div style="font-size:13px;padding:11px 16px;background:#fff8f8;border-left:3px solid var(--bad);border-radius:0 8px 8px 0;"><b>最大的未解问题：</b>Kimi 和 DeepSeek 在某些 persona 上评判方向完全相反（如 cautious_stable 一个给 3:0，另一个给 0:3）。这说明"社会真实感"本身是个主观指标，不同模型有不同的"什么叫像真实人"的内隐标准。这是方法论的局限，不是 PCAA 本身的问题——解决方案是引入第三个裁判家族和人工标注。</div>
           </div>
         </div>
 
-        <!-- 5. 接下来 -->
+        <!-- 6. 三个最重要的 insight -->
         <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
-          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">NEXT · 接下来要做什么</div>
-          <div style="display:grid;gap:10px;">
-            <div style="display:flex;gap:12px;align-items:start;font-size:14px;">
-              <span style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700;">①</span>
-              <span><b>experimental_pga 跑 20 轮</b>——验证轮次效应是否进一步拉开 Kimi 胜率（目前10轮已61%，预期更高）</span>
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">INSIGHTS · 我学到了什么（三个值得迁移的 PM 思维）</div>
+          <div style="display:grid;gap:14px;">
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;">
+              <div style="font-size:22px;">💡</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;margin-bottom:4px;">诚实面对 baseline 升级后的"消失的优势"</div>
+                <p style="margin:0;font-size:13px;color:var(--ink-soft);">给对照组升级 GA 记忆后，PCAA 的胜率从 56% 跌到 44%。这很容易让人想"悄悄不提这个结果"。但这反而成了研究最有价值的发现——它精确地测量出了"人格约束"相对于"记忆架构"的边际贡献。做 PM 也一样：强对照组让你发现真正的增量，弱对照组只是让你看起来好。</p>
+              </div>
             </div>
-            <div style="display:flex;gap:12px;align-items:start;font-size:14px;">
-              <span style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700;">②</span>
-              <span><b>引入第三个裁判家族</b>（GPT-4o 或 Claude）——解决 Kimi/DeepSeek 系统性逆转问题，三方一致才能写进论文结论</span>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;">
+              <div style="font-size:22px;">💡</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;margin-bottom:4px;">整合优于叠加——不是"加功能"，是"改架构"</div>
+                <p style="margin:0;font-size:13px;color:var(--ink-soft);">叠加式（experimental_ga）把人格约束和 GA 记忆并列，结果两套系统产生竞争信号，整体效果不升反不稳定。整合式（experimental_pga）把人格先验渗透进检索/反思/规划三个环节，两者协同，Kimi 胜率从 39% 升至 61%。这对产品设计的启示：两个新特性"都上"不等于"1+1=2"，必须考虑系统一致性。</p>
+              </div>
             </div>
-            <div style="display:flex;gap:12px;align-items:start;font-size:14px;">
-              <span style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700;">③</span>
-              <span><b>人格极端度作为显式变量</b>——把 6 个 persona 按特质偏差度分组，确认"中间值人格 PCAA 效力弱"的假说</span>
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;">
+              <div style="font-size:22px;">💡</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;margin-bottom:4px;">评测方式的选择决定你能得到什么答案</div>
+                <p style="margin:0;font-size:13px;color:var(--ink-soft);">一开始用离散向量计算"人格一致性指标"，结果所有条件得分都在 0.98–1.0，区分不了任何东西。后来改用 LLM 盲评配对（Social Realism），立刻就能看到 56% vs 28% 的差距。指标设计本身就是产品决策——你选了哪个指标，就只能看到那个指标能测量的世界。</p>
+              </div>
             </div>
-            <div style="display:flex;gap:12px;align-items:start;font-size:14px;">
-              <span style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--ink-faint);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700;">④</span>
-              <span><b>Phase 2（100 轮）</b>——在更长时间维度检验同质化收敛曲线，补充 embedding-based 稳定性指标</span>
+          </div>
+        </div>
+
+        <!-- 7. 产品化思考 -->
+        <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">PRODUCT THINKING · 如果产品化，这个研究能做什么</div>
+          <div style="display:grid;gap:10px;font-size:14px;">
+            <div style="background:var(--bg-alt);border-radius:8px;padding:12px 14px;">
+              <b>AI 陪伴 / 社交 Agent：</b>给每个虚拟角色设定量化人格先验，防止它在长期对话中被用户的聊天内容"带偏"，失去最初的角色设定。例如某个角色设定为"温暖但直接"，在聊了一个月后不会因为用户总是讨论负面话题就变成"悲观消极"。
             </div>
+            <div style="background:var(--bg-alt);border-radius:8px;padding:12px 14px;">
+              <b>多 Agent 模拟 / 数字孪生：</b>模拟一个城市或组织中的 N 个人，研究政策效果、消费行为、疾病传播。PCAA 保证每个 Agent 的人格在长期模拟中不收敛，使多样性可量化可控。
+            </div>
+            <div style="background:var(--bg-alt);border-radius:8px;padding:12px 14px;">
+              <b>游戏 NPC：</b>给每个 NPC 一套量化人格，使其在玩家交互中保持个性稳定，同时允许缓慢漂移（5% 的漂移率），让 NPC 感觉"在成长"而不是"突然变成另一个人"。
+            </div>
+            <div style="background:var(--bg-alt);border-radius:8px;padding:12px 14px;">
+              <b>人格可调的 AI 助理：</b>将用户的偏好（"我想要一个更直接的助理"）量化成向量调参，而不是重写人设 prompt。改动可解释、可回滚、可 A/B 测试。
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. 局限性 + 下一步 -->
+        <div style="background:#fff;border-radius:12px;padding:24px 28px;box-shadow:0 2px 12px rgba(91,79,229,.08);">
+          <div style="font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;">LIMITS &amp; NEXT · 诚实的局限性 + 接下来要做什么</div>
+          <div style="display:grid;gap:10px;margin-bottom:20px;font-size:13px;">
+            <div style="padding:10px 14px;background:#fff8f8;border-left:3px solid var(--bad);border-radius:0 8px 8px 0;"><b>样本量：</b>每次评测 18 次配对比较（6 persona × 3 窗口）。在统计上属于探索性研究（pilot study），结论方向可信，具体数字不应过度解读。</div>
+            <div style="padding:10px 14px;background:#fff8f8;border-left:3px solid var(--bad);border-radius:0 8px 8px 0;"><b>评测主观性：</b>LLM Judge 的"社会真实感"判断与人的判断未经校准。两个 Judge 模型在部分 persona 上完全逆转，说明该指标存在模型偏差，需要人工标注作为锚点。</div>
+            <div style="padding:10px 14px;background:#fff8f8;border-left:3px solid var(--bad);border-radius:0 8px 8px 0;"><b>场景单一性：</b>目前 5 个场景都是日常财务/社交情境。对"专业场景"（职场、学术、创意任务）的泛化能力尚未测试。</div>
+            <div style="padding:10px 14px;background:#fff8f8;border-left:3px solid var(--bad);border-radius:0 8px 8px 0;"><b>人格覆盖：</b>easygoing_drifter（六个维度都接近中间值 0.5）的 PCAA 效果不稳定——数值先验对"没有明显个性"的人格几乎没有方向性约束力。说明这个方法对极端人格最有效。</div>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:10px;">下一步（优先级排序）：</div>
+          <div style="display:grid;gap:8px;font-size:13px;">
+            <div style="display:flex;gap:10px;align-items:start;"><span style="flex-shrink:0;background:var(--accent);color:#fff;border-radius:99px;padding:2px 10px;font-size:11px;font-weight:700;">P0</span><span><b>整合式 GA 跑 20 轮</b>——验证轮次效应是否进一步拉开 61% 的优势，预计达到 75%+</span></div>
+            <div style="display:flex;gap:10px;align-items:start;"><span style="flex-shrink:0;background:var(--accent);color:#fff;border-radius:99px;padding:2px 10px;font-size:11px;font-weight:700;">P0</span><span><b>引入第三裁判（GPT-4o 或 Claude）</b>——三方一致性才能写进论文结论，解决 Kimi/DeepSeek 系统性逆转</span></div>
+            <div style="display:flex;gap:10px;align-items:start;"><span style="flex-shrink:0;background:var(--ink-faint);color:#fff;border-radius:99px;padding:2px 10px;font-size:11px;font-weight:700;">P1</span><span><b>人格极端度作为显式变量</b>——6 个 persona 按特质偏差度分组，量化"PCAA 在哪些人格类型上最有效"</span></div>
+            <div style="display:flex;gap:10px;align-items:start;"><span style="flex-shrink:0;background:var(--ink-faint);color:#fff;border-radius:99px;padding:2px 10px;font-size:11px;font-weight:700;">P2</span><span><b>Phase 2（100 轮 + 人工标注）</b>——在真实时间线长度上检验同质化收敛曲线，补充 embedding-based 稳定性指标</span></div>
           </div>
         </div>
 
